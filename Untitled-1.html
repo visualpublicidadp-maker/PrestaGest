@@ -1,0 +1,2747 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
+    />
+    <title>PrestaGest Pro v5.0</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg-base: #0a0e1a;
+        --bg-card: #141824;
+        --bg-card-hover: #1b2131;
+        --primary: #00d4aa;
+        --primary-dark: #00a887;
+        --warning: #ff6b35;
+        --danger: #ff3b30;
+        --success: #34c759;
+        --info: #007aff;
+        --special: #af82ff;
+        --text-main: #e8edf5;
+        --text-muted: #8e98a8;
+        --border: #2a3142;
+        --radius: 16px;
+        --font:
+          system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          sans-serif;
+        --safe-bottom: env(safe-area-inset-bottom, 0px);
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: var(--font);
+        -webkit-tap-highlight-color: transparent;
+      }
+      body {
+        background-color: var(--bg-base);
+        color: var(--text-main);
+        line-height: 1.5;
+        padding-bottom: calc(70px + var(--safe-bottom));
+        overflow-x: hidden;
+      }
+
+      .hidden {
+        display: none !important;
+      }
+      .flex {
+        display: flex;
+      }
+      .flex-col {
+        display: flex;
+        flex-direction: column;
+      }
+      .justify-between {
+        justify-content: space-between;
+      }
+      .items-center {
+        align-items: center;
+      }
+      .text-center {
+        text-align: center;
+      }
+      .text-right {
+        text-align: right;
+      }
+      .text-primary {
+        color: var(--primary);
+      }
+      .text-danger {
+        color: var(--danger);
+      }
+      .text-warning {
+        color: var(--warning);
+      }
+      .text-success {
+        color: var(--success);
+      }
+      .text-info {
+        color: var(--info);
+      }
+      .text-muted {
+        color: var(--text-muted);
+        font-size: 0.85rem;
+      }
+      .font-bold {
+        font-weight: 700;
+      }
+      .mt-1 {
+        margin-top: 0.5rem;
+      }
+      .mt-2 {
+        margin-top: 1rem;
+      }
+      .mb-1 {
+        margin-bottom: 0.5rem;
+      }
+      .mb-2 {
+        margin-bottom: 1rem;
+      }
+      .gap-1 {
+        gap: 0.5rem;
+      }
+      .gap-2 {
+        gap: 1rem;
+      }
+
+      h1 {
+        font-size: 1.5rem;
+        font-weight: 700;
+      }
+      h2 {
+        font-size: 1.25rem;
+        font-weight: 600;
+      }
+      h3 {
+        font-size: 1.1rem;
+        font-weight: 600;
+      }
+      .currency {
+        font-weight: 700;
+        font-variant-numeric: tabular-nums;
+      }
+      .big-amount {
+        font-size: 2rem;
+        color: var(--primary);
+        line-height: 1.1;
+      }
+
+      .container {
+        padding: 1rem;
+        max-width: 600px;
+        margin: 0 auto;
+      }
+      .card {
+        background: var(--bg-card);
+        border-radius: var(--radius);
+        padding: 1rem;
+        border: 1px solid var(--border);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      .btn {
+        background: var(--border);
+        color: var(--text-main);
+        border: none;
+        padding: 0.8rem 1rem;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.2s;
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      .btn:active {
+        transform: scale(0.98);
+      }
+      .btn-primary {
+        background: var(--primary);
+        color: #000;
+      }
+      .btn-success {
+        background: var(--success);
+        color: #fff;
+      }
+      .btn-danger {
+        background: rgba(255, 59, 48, 0.1);
+        color: var(--danger);
+        border: 1px solid var(--danger);
+      }
+      .btn-info {
+        background: rgba(0, 122, 255, 0.1);
+        color: var(--info);
+        border: 1px solid var(--info);
+      }
+      .btn-block {
+        width: 100%;
+      }
+
+      .input-group {
+        margin-bottom: 1rem;
+      }
+      .input-group label {
+        display: block;
+        margin-bottom: 0.4rem;
+        font-size: 0.9rem;
+        color: var(--text-muted);
+      }
+      .form-control {
+        width: 100%;
+        background-color: var(--bg-base);
+        border: 1px solid var(--border);
+        color: var(--text-main);
+        padding: 0.8rem;
+        border-radius: 8px;
+        font-size: 1rem;
+        outline: none;
+        transition: border-color 0.2s;
+      }
+      .form-control:focus {
+        border-color: var(--primary);
+      }
+      select.form-control option {
+        background-color: var(--bg-base);
+        color: var(--text-main);
+      }
+      .form-row {
+        display: flex;
+        gap: 1rem;
+      }
+      .form-row > * {
+        flex: 1;
+      }
+
+      .chip-scroll {
+        display: flex;
+        gap: 0.5rem;
+        overflow-x: auto;
+        padding-bottom: 0.5rem;
+        margin-bottom: 0.5rem;
+        -webkit-overflow-scrolling: touch;
+      }
+      .chip-scroll::-webkit-scrollbar {
+        display: none;
+      }
+      .chip {
+        padding: 0.4rem 1rem;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        cursor: pointer;
+        white-space: nowrap;
+        transition: 0.2s;
+      }
+      .chip.active {
+        background: rgba(0, 212, 170, 0.15);
+        border-color: var(--primary);
+        color: var(--primary);
+      }
+      .chip.chip-alert.active {
+        background: rgba(255, 107, 53, 0.15);
+        border-color: var(--warning);
+        color: var(--warning);
+      }
+
+      .bottom-nav {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: var(--bg-card);
+        border-top: 1px solid var(--border);
+        display: flex;
+        justify-content: space-around;
+        padding: 0.5rem 0 calc(0.5rem + var(--safe-bottom)) 0;
+        z-index: 100;
+      }
+      .nav-item {
+        flex: 1;
+        background: transparent;
+        border: none;
+        color: var(--text-muted);
+        padding: 0.5rem;
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.3rem;
+        font-size: 0.75rem;
+        transition: color 0.2s;
+      }
+      .nav-item.active {
+        color: var(--primary);
+      }
+      .nav-item svg {
+        width: 24px;
+        height: 24px;
+        fill: currentColor;
+      }
+
+      .loan-card {
+        margin-bottom: 1rem;
+        cursor: pointer;
+        transition: transform 0.2s;
+        position: relative;
+      }
+      .loan-card:active {
+        transform: translateY(2px);
+        background: var(--bg-card-hover);
+      }
+      .status-badge {
+        padding: 0.2rem 0.6rem;
+        border-radius: 12px;
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        display: inline-block;
+      }
+      .status-activo {
+        background: rgba(0, 212, 170, 0.1);
+        color: var(--primary);
+      }
+      .status-mora {
+        background: rgba(255, 59, 48, 0.1);
+        color: var(--danger);
+      }
+      .status-alerta {
+        background: rgba(255, 107, 53, 0.1);
+        color: var(--warning);
+      }
+      .status-pagado {
+        background: rgba(142, 152, 168, 0.1);
+        color: var(--text-muted);
+      }
+      .status-pausado {
+        background: rgba(0, 122, 255, 0.1);
+        color: var(--info);
+      }
+      .status-solocap {
+        background: rgba(175, 130, 255, 0.1);
+        color: var(--special);
+      }
+      .status-renovar {
+        background: rgba(175, 130, 255, 0.2);
+        color: #d4a5ff;
+        box-shadow: 0 0 8px rgba(175, 130, 255, 0.4);
+        animation: pulse 2s infinite;
+      }
+
+      @keyframes pulse {
+        0% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.7;
+        }
+        100% {
+          opacity: 1;
+        }
+      }
+
+      .score-stars {
+        color: #ffd700;
+        font-size: 0.8rem;
+        letter-spacing: 2px;
+      }
+
+      .progress-bar {
+        height: 5px;
+        background: var(--bg-base);
+        border-radius: 3px;
+        margin-top: 0.5rem;
+        overflow: hidden;
+      }
+      .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, var(--primary), #00f5c8);
+        border-radius: 3px;
+        transition: width 0.3s ease;
+      }
+
+      .health-bar {
+        display: flex;
+        height: 8px;
+        background: var(--bg-base);
+        border-radius: 4px;
+        overflow: hidden;
+        margin-top: 0.5rem;
+      }
+      .health-sano {
+        background: var(--primary);
+        transition: width 0.5s;
+      }
+      .health-mora {
+        background: var(--danger);
+        transition: width 0.5s;
+      }
+
+      .table-responsive {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        margin-top: 1rem;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.85rem;
+        min-width: 500px;
+      }
+      th,
+      td {
+        padding: 0.8rem;
+        text-align: right;
+        border-bottom: 1px solid var(--border);
+        white-space: nowrap;
+      }
+      th:first-child,
+      td:first-child {
+        text-align: left;
+      }
+      th {
+        background: var(--bg-base);
+        color: var(--text-muted);
+        font-weight: 600;
+        position: sticky;
+        top: 0;
+      }
+      tr.row-pagada {
+        background: rgba(52, 199, 89, 0.05);
+        color: var(--text-muted);
+      }
+      tr.row-actual {
+        background: rgba(255, 107, 53, 0.08);
+        font-weight: bold;
+      }
+      tr.row-mora {
+        background: rgba(255, 59, 48, 0.08);
+      }
+
+      .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.7);
+        z-index: 1000;
+        display: flex;
+        justify-content: center;
+        align-items: flex-end;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s;
+        backdrop-filter: blur(2px);
+      }
+      .modal-overlay.active {
+        opacity: 1;
+        pointer-events: auto;
+      }
+      .drawer {
+        background: var(--bg-base);
+        width: 100%;
+        max-width: 600px;
+        border-radius: 24px 24px 0 0;
+        padding: 1.5rem;
+        padding-bottom: calc(1.5rem + var(--safe-bottom));
+        transform: translateY(100%);
+        transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1);
+        max-height: 90vh;
+        overflow-y: auto;
+      }
+      .modal-overlay.active .drawer {
+        transform: translateY(0);
+      }
+      .drawer-handle {
+        width: 40px;
+        height: 5px;
+        background: var(--border);
+        border-radius: 3px;
+        margin: 0 auto 1rem auto;
+      }
+
+      .wizard-steps {
+        display: flex;
+        justify-content: center;
+        gap: 0.5rem;
+        margin-bottom: 1.5rem;
+      }
+      .step-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: var(--border);
+        transition: 0.3s;
+      }
+      .step-dot.active {
+        background: var(--primary);
+        transform: scale(1.2);
+      }
+      .wizard-pane {
+        display: none;
+        animation: fadeIn 0.3s ease;
+      }
+      .wizard-pane.active {
+        display: block;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .global-summary {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.8rem;
+        margin-bottom: 1rem;
+      }
+      .summary-box {
+        background: var(--bg-card);
+        padding: 1rem;
+        border-radius: 12px;
+        text-align: center;
+        border: 1px solid var(--border);
+      }
+      .note-card {
+        background: var(--bg-base);
+        border-left: 3px solid var(--primary);
+        padding: 0.8rem;
+        border-radius: 0 8px 8px 0;
+        margin-bottom: 0.5rem;
+        font-size: 0.85rem;
+      }
+      .alert-banner {
+        background: rgba(255, 59, 48, 0.1);
+        border: 1px solid var(--danger);
+        color: var(--danger);
+        padding: 0.8rem;
+        border-radius: 8px;
+        font-size: 0.85rem;
+        margin-bottom: 1rem;
+        display: flex;
+        gap: 0.5rem;
+        align-items: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="view-dashboard" class="container">
+      <div class="flex justify-between items-center mb-2">
+        <h1>
+          Presta<span class="text-primary">Gest</span>
+          <span style="font-size: 0.8rem; color: var(--text-muted)">v5.0</span>
+        </h1>
+        <button
+          class="btn btn-primary"
+          onclick="app.nav('create')"
+          style="padding: 0.5rem; border-radius: 50%"
+        >
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+            <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
+          </svg>
+        </button>
+      </div>
+
+      <div
+        class="card mb-2"
+        style="
+          background: linear-gradient(
+            135deg,
+            rgba(0, 212, 170, 0.1),
+            transparent
+          );
+          border-color: var(--primary);
+        "
+      >
+        <div class="flex justify-between items-center mb-1">
+          <div>
+            <div class="text-muted text-sm font-bold uppercase">
+              Proyección Ingresos (Este Mes)
+            </div>
+            <div class="currency big-amount" id="dash-flujo">$0</div>
+          </div>
+          <div class="text-primary">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
+              <path
+                d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"
+              />
+            </svg>
+          </div>
+        </div>
+        <div class="text-xs text-muted">
+          Salud de la Cartera Activa:
+          <span id="dash-health-text" class="font-bold text-primary"
+            >100% Sano</span
+          >
+        </div>
+        <div class="health-bar">
+          <div class="health-sano" id="dash-bar-sano" style="width: 100%"></div>
+          <div class="health-mora" id="dash-bar-mora" style="width: 0%"></div>
+        </div>
+      </div>
+
+      <div class="global-summary">
+        <div class="summary-box">
+          <div class="text-muted text-sm">Cartera Activa</div>
+          <div class="currency text-primary" id="dash-cartera">$0</div>
+        </div>
+        <div class="summary-box">
+          <div class="text-muted text-sm">Capital en Mora</div>
+          <div class="currency text-danger" id="dash-mora">$0</div>
+        </div>
+        <div class="summary-box" style="border-color: var(--info)">
+          <div class="text-muted text-sm" style="color: var(--info)">
+            Capital Recuperado
+          </div>
+          <div class="currency text-main" id="dash-cap-recup">$0</div>
+        </div>
+        <div class="summary-box" style="border-color: var(--success)">
+          <div class="text-muted text-sm" style="color: var(--success)">
+            Intereses Ganados
+          </div>
+          <div class="currency text-success" id="dash-profit">$0</div>
+        </div>
+      </div>
+
+      <div class="input-group relative">
+        <input
+          type="text"
+          id="search-input"
+          class="form-control"
+          placeholder="Buscar por nombre o cédula..."
+          oninput="app.renderDashboard()"
+        />
+      </div>
+
+      <div class="chip-scroll no-print">
+        <div
+          class="chip active"
+          data-filter="todos"
+          onclick="app.setFilter('todos', this)"
+        >
+          Todos
+        </div>
+        <div
+          class="chip chip-alert"
+          data-filter="preventivo"
+          onclick="app.setFilter('preventivo', this)"
+        >
+          Próx. 7 Días
+        </div>
+        <div
+          class="chip"
+          data-filter="renovar"
+          onclick="app.setFilter('renovar', this)"
+        >
+          Para Renovar
+        </div>
+        <div
+          class="chip"
+          data-filter="mora"
+          onclick="app.setFilter('mora', this)"
+        >
+          En Mora
+        </div>
+        <div
+          class="chip"
+          data-filter="activo"
+          onclick="app.setFilter('activo', this)"
+        >
+          Activos
+        </div>
+        <div
+          class="chip"
+          data-filter="solo_capital"
+          onclick="app.setFilter('solo_capital', this)"
+        >
+          Solo Capital
+        </div>
+        <div
+          class="chip"
+          data-filter="pagado"
+          onclick="app.setFilter('pagado', this)"
+        >
+          Pagados
+        </div>
+      </div>
+
+      <div id="loans-list" class="flex-col gap-2"></div>
+
+      <div class="mt-2 flex gap-1 no-print">
+        <button
+          class="btn btn-block btn-info"
+          onclick="app.exportCSV()"
+          style="background: rgba(0, 122, 255, 0.1)"
+        >
+          Excel CSV
+        </button>
+        <button class="btn btn-block" onclick="app.exportData()">Backup</button>
+        <button
+          class="btn btn-block"
+          onclick="document.getElementById('import-file').click()"
+        >
+          Restaurar
+        </button>
+        <input
+          type="file"
+          id="import-file"
+          class="hidden"
+          accept=".json"
+          onchange="app.importData(event)"
+        />
+      </div>
+    </div>
+
+    <div id="view-create" class="container hidden">
+      <h1 class="mb-2">Nuevo Préstamo</h1>
+
+      <div class="chip-scroll mb-2">
+        <div
+          class="chip active"
+          id="chip-t-normal"
+          onclick="app.setLoanType('normal')"
+        >
+          Préstamo Normal
+        </div>
+        <div
+          class="chip"
+          id="chip-t-capital"
+          onclick="app.setLoanType('solo_capital')"
+        >
+          Solo Capital
+        </div>
+      </div>
+
+      <div class="card" id="form-normal">
+        <div class="wizard-steps">
+          <div class="step-dot active" id="dot-1"></div>
+          <div class="step-dot" id="dot-2"></div>
+          <div class="step-dot" id="dot-3"></div>
+        </div>
+
+        <div id="wizard-1" class="wizard-pane active">
+          <h2 class="mb-1">Datos del Cliente</h2>
+          <div class="input-group">
+            <label>Nombre Completo *</label
+            ><input type="text" id="form-nombre" class="form-control" />
+          </div>
+          <div class="form-row">
+            <div class="input-group">
+              <label>Cédula *</label
+              ><input type="number" id="form-cedula" class="form-control" />
+            </div>
+            <div class="input-group">
+              <label>Teléfono (Sin espacios)</label
+              ><input
+                type="tel"
+                id="form-telefono"
+                class="form-control"
+                placeholder="Ej: 3001234567"
+              />
+            </div>
+          </div>
+          <h2 class="mb-1 mt-2 text-muted" style="font-size: 1rem">
+            Codeudor y Garantía (Opcional)
+          </h2>
+          <div class="input-group">
+            <label>Nombre Codeudor</label
+            ><input type="text" id="form-co-nombre" class="form-control" />
+          </div>
+          <div class="input-group">
+            <label>Garantía / Respaldo</label
+            ><input type="text" id="form-garantia" class="form-control" />
+          </div>
+          <button
+            class="btn btn-primary btn-block mt-2"
+            onclick="app.wizardNext(2)"
+          >
+            Siguiente
+          </button>
+        </div>
+
+        <div id="wizard-2" class="wizard-pane">
+          <h2 class="mb-2">Condiciones</h2>
+          <div id="usura-warning" class="alert-banner hidden">
+            ⚠️ La tasa ingresada supera la Tasa de Usura legal vigente.
+          </div>
+
+          <div class="form-row">
+            <div class="input-group">
+              <label>Capital a prestar ($) *</label>
+              <input
+                type="text"
+                inputmode="numeric"
+                id="form-capital"
+                class="form-control currency-input"
+                oninput="app.formatInput(event)"
+              />
+            </div>
+            <div class="input-group">
+              <label>Fecha Desembolso *</label>
+              <input
+                type="date"
+                id="form-fecha"
+                class="form-control"
+                oninput="app.previewLoan()"
+              />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="input-group">
+              <label>Tipo de Tasa</label>
+              <select
+                id="form-ttasa"
+                class="form-control"
+                onchange="app.previewLoan()"
+              >
+                <option value="nmv">NMV (Nominal Mensual)</option>
+                <option value="ea">EA (Efectiva Anual)</option>
+              </select>
+            </div>
+            <div class="input-group">
+              <label>Tasa Anual (%) *</label>
+              <input
+                type="number"
+                step="0.01"
+                id="form-tasa"
+                class="form-control"
+                value="0"
+                oninput="app.previewLoan()"
+              />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="input-group">
+              <label>Plazo (Cuotas) *</label
+              ><input
+                type="number"
+                id="form-plazo"
+                class="form-control"
+                oninput="app.previewLoan()"
+              />
+            </div>
+            <div class="input-group">
+              <label>Frecuencia</label>
+              <select
+                id="form-freq"
+                class="form-control"
+                onchange="app.previewLoan()"
+              >
+                <option value="mensual">Mensual</option>
+                <option value="quincenal">Quincenal</option>
+                <option value="semanal">Semanal</option>
+              </select>
+            </div>
+          </div>
+
+          <div
+            class="form-row mt-1 pt-1"
+            style="border-top: 1px solid var(--border)"
+          >
+            <div class="input-group">
+              <label>Días de Gracia</label
+              ><input
+                type="number"
+                id="form-gracia"
+                class="form-control"
+                value="0"
+              />
+            </div>
+            <div class="input-group">
+              <label>Interés de Mora</label>
+              <select
+                id="form-tmora"
+                class="form-control"
+                onchange="app.toggleCustomMora()"
+              >
+                <option value="usura">Cobrar Tasa Usura</option>
+                <option value="custom">Personalizada</option>
+                <option value="cero">0% (No cobrar mora)</option>
+              </select>
+            </div>
+          </div>
+          <div class="input-group hidden" id="box-mora-custom">
+            <label>Tasa Mora EA (%)</label
+            ><input
+              type="number"
+              step="0.01"
+              id="form-mora-tasa"
+              class="form-control"
+            />
+          </div>
+          <div class="input-group">
+            <label>Seguro Fijo por cuota ($)</label
+            ><input
+              type="text"
+              inputmode="numeric"
+              id="form-seguro"
+              class="form-control currency-input"
+              oninput="app.formatInput(event)"
+            />
+          </div>
+
+          <div
+            class="card mb-2"
+            style="background: var(--bg-base); border-color: var(--primary)"
+          >
+            <div class="text-center">
+              <div class="text-muted">Valor de Cuota Estimado</div>
+              <div class="currency big-amount" id="preview-cuota">$0</div>
+              <div class="text-muted mt-1" id="preview-totales">
+                Total a pagar: $0 | Intereses: $0
+              </div>
+            </div>
+          </div>
+
+          <div class="flex gap-1 mt-2">
+            <button class="btn btn-block" onclick="app.wizardNext(1)">
+              Atrás
+            </button>
+            <button
+              class="btn btn-primary btn-block"
+              onclick="app.wizardNext(3)"
+            >
+              Siguiente
+            </button>
+          </div>
+        </div>
+
+        <div id="wizard-3" class="wizard-pane">
+          <h2 class="mb-2">Resumen y Tabla</h2>
+          <div class="table-responsive mb-2" style="max-height: 250px">
+            <table id="preview-table">
+              <thead>
+                <tr>
+                  <th>N°</th>
+                  <th>Fecha</th>
+                  <th>Cuota</th>
+                  <th>Capital</th>
+                  <th>Interés</th>
+                  <th>Saldo</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+          <div class="input-group mt-2">
+            <label>Notas Iniciales</label
+            ><textarea id="form-notas" class="form-control" rows="2"></textarea>
+          </div>
+          <div class="flex gap-1 mt-2">
+            <button class="btn btn-block" onclick="app.wizardNext(2)">
+              Atrás
+            </button>
+            <button
+              class="btn btn-success btn-block"
+              onclick="app.createLoan()"
+            >
+              Crear Préstamo
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card hidden" id="form-capital-only">
+        <p class="text-muted text-sm mb-2">
+          Solo control del saldo a capital puro.
+        </p>
+        <div class="input-group">
+          <label>Nombre Cliente *</label
+          ><input type="text" id="sc-nombre" class="form-control" />
+        </div>
+        <div class="form-row">
+          <div class="input-group">
+            <label>Cédula</label
+            ><input type="number" id="sc-cedula" class="form-control" />
+          </div>
+          <div class="input-group">
+            <label>Teléfono</label
+            ><input type="tel" id="sc-tel" class="form-control" />
+          </div>
+        </div>
+        <div class="input-group">
+          <label>Saldo Adeudado ($) *</label
+          ><input
+            type="text"
+            inputmode="numeric"
+            id="sc-capital"
+            class="form-control currency-input"
+            oninput="app.formatInput(event)"
+          />
+        </div>
+        <div class="input-group">
+          <label>Fecha *</label
+          ><input type="date" id="sc-fecha" class="form-control" />
+        </div>
+        <div class="input-group">
+          <label>Notas</label
+          ><textarea id="sc-notas" class="form-control" rows="2"></textarea>
+        </div>
+        <button
+          class="btn btn-success btn-block mt-2"
+          onclick="app.createSoloCapital()"
+        >
+          ✓ Crear Préstamo Especial
+        </button>
+      </div>
+    </div>
+
+    <div id="view-detail" class="container hidden">
+      <div class="flex items-center gap-1 mb-2">
+        <button
+          class="btn"
+          onclick="app.nav('dashboard')"
+          style="padding: 0.5rem"
+        >
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+            <path
+              d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"
+            />
+          </svg>
+        </button>
+        <div style="flex: 1; overflow: hidden">
+          <h1
+            id="det-name"
+            style="
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              line-height: 1.2;
+            "
+          >
+            Detalle
+          </h1>
+          <div id="det-score" class="score-stars">⭐⭐⭐⭐⭐</div>
+        </div>
+        <div class="flex-col items-center">
+          <span id="det-status" class="status-badge mb-1">Activo</span>
+          <span
+            id="det-renovar-badge"
+            class="status-badge status-renovar hidden"
+            >¡RENOVAR!</span
+          >
+        </div>
+      </div>
+
+      <div
+        class="card mb-2"
+        id="det-hero-card"
+        style="border-color: var(--primary)"
+      >
+        <div class="text-center mb-1">
+          <div class="text-muted font-bold">TOTAL A PAGAR HOY</div>
+          <div class="currency big-amount" id="det-total-hoy">$0</div>
+          <div class="text-danger font-bold text-sm" id="det-mora-alert"></div>
+        </div>
+        <div class="flex flex-col gap-1 text-sm">
+          <div class="flex justify-between">
+            <span>Saldo Capital Vigente:</span
+            ><span class="currency font-bold" id="det-saldo-cap">$0</span>
+          </div>
+          <div class="flex justify-between text-muted" id="row-int-cor">
+            <span>Interés Corriente Acum.:</span
+            ><span class="currency" id="det-int-acum">$0</span>
+          </div>
+          <div
+            class="flex justify-between text-danger hidden"
+            id="row-int-mora"
+          >
+            <span>Interés Mora:</span
+            ><span class="currency" id="det-int-mora">$0</span>
+          </div>
+          <div class="flex justify-between text-muted" id="row-seguros">
+            <span>Seguros Pendientes:</span
+            ><span class="currency" id="det-seguros">$0</span>
+          </div>
+          <div
+            class="flex justify-between mt-1 pt-1"
+            style="border-top: 1px solid var(--border)"
+            id="row-prox-fecha"
+          >
+            <span class="text-primary font-bold">Próx. Vencimiento:</span
+            ><span class="font-bold" id="det-prox-fecha">-</span>
+          </div>
+        </div>
+        <div class="flex gap-1 mt-2" id="det-actions-main">
+          <button
+            class="btn btn-primary btn-block"
+            onclick="app.openPaymentModal()"
+          >
+            Registrar Pago
+          </button>
+        </div>
+        <div class="flex gap-1 mt-1" id="det-actions-sec">
+          <button class="btn btn-block" onclick="app.openExtraModal()">
+            Abono Extra</button
+          ><button
+            class="btn btn-block"
+            onclick="app.togglePause()"
+            id="btn-pausar"
+          >
+            Pausar
+          </button>
+        </div>
+        <div class="flex gap-1 mt-1 hidden" id="det-actions-paid">
+          <button
+            class="btn btn-success btn-block"
+            onclick="app.exportPazYSalvo()"
+          >
+            ✅ Generar Paz y Salvo
+          </button>
+        </div>
+      </div>
+
+      <div class="card mb-2" id="det-wa-box">
+        <h3 class="text-sm text-muted uppercase mb-1">Comunicaciones</h3>
+        <div class="flex gap-1">
+          <button
+            class="btn btn-info btn-block"
+            style="font-size: 0.85rem"
+            onclick="app.sendWA('preventivo')"
+          >
+            💬 R. Preventivo
+          </button>
+          <button
+            class="btn btn-danger btn-block"
+            style="font-size: 0.85rem"
+            onclick="app.sendWA('mora')"
+          >
+            ⚠️ Cobro Mora
+          </button>
+        </div>
+      </div>
+
+      <details class="card mb-2">
+        <summary class="font-bold" style="cursor: pointer; outline: none">
+          Datos del Préstamo y Cliente
+        </summary>
+        <div class="mt-1 text-sm flex-col gap-1" id="det-info-html"></div>
+        <div class="mt-2 text-right flex gap-1 justify-between">
+          <button
+            class="btn btn-block"
+            onclick="app.exportStatementPDF()"
+            id="btn-export-est"
+          >
+            Estado de Cuenta
+          </button>
+          <button class="btn btn-danger btn-block" onclick="app.deleteLoan()">
+            Eliminar
+          </button>
+        </div>
+      </details>
+
+      <h2 class="mb-1 text-sm text-muted uppercase">Notas e Historial</h2>
+      <div class="card mb-2">
+        <div id="det-notas-list"></div>
+        <div class="flex gap-1 mt-1">
+          <input
+            type="text"
+            id="nueva-nota"
+            class="form-control"
+            placeholder="Agregar nota..."
+          /><button class="btn btn-primary" onclick="app.addNote()">+</button>
+        </div>
+      </div>
+
+      <div id="det-tabla-container">
+        <h2 class="mb-1">Tabla de Amortización</h2>
+        <div class="text-muted text-sm mb-1">
+          Progreso: <span id="det-progreso">0/0</span> cuotas
+        </div>
+        <div class="table-responsive mb-2">
+          <table id="det-table">
+            <thead>
+              <tr>
+                <th>N°</th>
+                <th>Fecha</th>
+                <th>Cuota</th>
+                <th>Capital</th>
+                <th>Interés</th>
+                <th>Seguro</th>
+                <th>Saldo</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+
+      <h2 class="mb-1">Historial de Pagos</h2>
+      <div class="table-responsive">
+        <table id="det-history">
+          <thead>
+            <tr>
+              <th>Fecha</th>
+              <th>Monto</th>
+              <th>Método</th>
+              <th>Recibo</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div id="modal-pago" class="modal-overlay">
+      <div class="drawer">
+        <div class="drawer-handle"></div>
+        <div class="flex justify-between items-center mb-2">
+          <h2 id="pago-titulo">Registrar Pago</h2>
+          <button
+            class="btn btn-danger"
+            style="padding: 0.3rem 0.6rem; font-size: 0.8rem"
+            onclick="app.zeroMoraOverride()"
+          >
+            Perdonar Mora
+          </button>
+        </div>
+
+        <div class="form-row mb-1">
+          <div class="input-group mb-0">
+            <label>Fecha</label
+            ><input
+              type="date"
+              id="pago-fecha"
+              class="form-control"
+              onchange="app.calcPaymentDistribution()"
+            />
+          </div>
+          <div class="input-group mb-0">
+            <label>Cuenta Destino</label>
+            <select id="pago-cuenta" class="form-control">
+              <option value="Nu Bank">Nu Bank</option>
+              <option value="Bancolombia">Bancolombia</option>
+              <option value="Nequi">Nequi</option>
+              <option value="Efectivo">Efectivo</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="input-group">
+          <label>Monto a Pagar ($)</label
+          ><input
+            type="text"
+            inputmode="numeric"
+            id="pago-monto"
+            class="form-control big-amount currency-input"
+            oninput="app.formatInput(event)"
+          />
+        </div>
+
+        <div
+          class="card mb-2"
+          style="background: var(--bg-base)"
+          id="pago-dist-box"
+        >
+          <h3 class="text-sm text-muted mb-1">Distribución del Pago</h3>
+          <div
+            class="flex justify-between text-danger text-sm hidden"
+            id="dist-mora-row"
+          >
+            <span>Mora:</span><span class="currency" id="dist-mora">$0</span>
+          </div>
+          <div class="flex justify-between text-muted text-sm">
+            <span>Interés:</span><span class="currency" id="dist-int">$0</span>
+          </div>
+          <div class="flex justify-between text-muted text-sm">
+            <span>Seguro:</span><span class="currency" id="dist-seg">$0</span>
+          </div>
+          <div class="flex justify-between font-bold text-sm mt-1">
+            <span>A Capital (Cuotas):</span
+            ><span class="currency" id="dist-cap">$0</span>
+          </div>
+          <div
+            class="flex justify-between text-primary text-sm mt-1 pt-1"
+            style="border-top: 1px solid var(--border)"
+          >
+            <span>Nuevo Saldo:</span
+            ><span class="currency" id="dist-nuevo-saldo">$0</span>
+          </div>
+        </div>
+
+        <div
+          class="card mb-2 hidden"
+          style="
+            background: rgba(0, 212, 170, 0.1);
+            border-color: var(--primary);
+          "
+          id="pago-excedente-box"
+        >
+          <h3 class="text-sm text-primary mb-1">
+            ¡Abono Extraordinario Detectado!
+          </h3>
+          <p class="text-xs text-main mb-1">
+            El monto supera la deuda al día por
+            <b id="excedente-val" class="currency text-primary">$0</b>. ¿A qué
+            quieres aplicarlo?
+          </p>
+          <select id="pago-excedente-tipo" class="form-control">
+            <option value="plazo">
+              Abonar a Capital (Reducir Plazo / Meses)
+            </option>
+            <option value="cuota">
+              Abonar a Capital (Reducir Cuota Mensual)
+            </option>
+          </select>
+        </div>
+        <div class="flex gap-1">
+          <button class="btn btn-block" onclick="app.closeModal('modal-pago')">
+            Cancelar</button
+          ><button
+            class="btn btn-success btn-block"
+            onclick="app.confirmPayment()"
+          >
+            Confirmar
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div id="modal-extra" class="modal-overlay">
+      <div class="drawer">
+        <div class="drawer-handle"></div>
+        <h2 class="mb-2">Abono Extra a Capital</h2>
+        <p class="text-muted text-sm mb-2">
+          Aplica directo al capital. Asegúrate de cobrar los intereses al día
+          con un "Pago Regular" primero.
+        </p>
+
+        <div class="form-row mb-1">
+          <div class="input-group mb-0">
+            <label>Fecha</label
+            ><input type="date" id="extra-fecha" class="form-control" />
+          </div>
+          <div class="input-group mb-0">
+            <label>Cuenta Destino</label>
+            <select id="extra-cuenta" class="form-control">
+              <option value="Nu Bank">Nu Bank</option>
+              <option value="Bancolombia">Bancolombia</option>
+              <option value="Nequi">Nequi</option>
+              <option value="Efectivo">Efectivo</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="input-group">
+          <label>Monto del Abono ($)</label
+          ><input
+            type="text"
+            inputmode="numeric"
+            id="extra-monto"
+            class="form-control big-amount currency-input"
+            oninput="app.formatInput(event)"
+          />
+        </div>
+        <div class="input-group">
+          <label>Estrategia de recalculo de tabla</label>
+          <select id="extra-tipo" class="form-control">
+            <option value="plazo">
+              Reducir Plazo (misma cuota, menos meses)
+            </option>
+            <option value="cuota">
+              Reducir Cuota (misma fecha final, cuota menor)
+            </option>
+          </select>
+        </div>
+        <div
+          class="text-success text-sm font-bold text-center mb-2 hidden"
+          id="extra-sim"
+        >
+          Ahorro estimado en intereses: $0
+        </div>
+        <div class="flex gap-1">
+          <button class="btn btn-block" onclick="app.closeModal('modal-extra')">
+            Cancelar</button
+          ><button
+            class="btn btn-success btn-block"
+            onclick="app.confirmExtraPayment()"
+          >
+            Aplicar Abono
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="bottom-nav">
+      <button
+        class="nav-item active"
+        id="nav-dashboard"
+        onclick="app.nav('dashboard')"
+      >
+        <svg viewBox="0 0 24 24">
+          <path
+            d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"
+          /></svg
+        >Inicio
+      </button>
+      <button class="nav-item" id="nav-create" onclick="app.nav('create')">
+        <svg viewBox="0 0 24 24">
+          <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" /></svg
+        >Nuevo
+      </button>
+    </div>
+
+    <script>
+      const Utils = {
+        formatCOP: (num) =>
+          new Intl.NumberFormat("es-CO", {
+            style: "currency",
+            currency: "COP",
+            maximumFractionDigits: 0,
+          }).format(Math.round(num) || 0),
+        parseDateSafe: (str) => {
+          if (!str) return new Date();
+          const p = str.split("T")[0].split("-");
+          if (p.length === 3)
+            return new Date(
+              parseInt(p[0], 10),
+              parseInt(p[1], 10) - 1,
+              parseInt(p[2], 10),
+            );
+          const d = new Date(str);
+          return Number.isNaN(d.getTime()) ? new Date() : d;
+        },
+        formatDateSafe: (d) => {
+          if (!(d instanceof Date) || Number.isNaN(d.getTime())) return "-";
+          return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+        },
+        addMonths: (str, m) => {
+          const d = Utils.parseDateSafe(str);
+          d.setMonth(d.getMonth() + m);
+          return Utils.formatDateSafe(d);
+        },
+        addDays: (str, days) => {
+          const d = Utils.parseDateSafe(str);
+          d.setDate(d.getDate() + days);
+          return Utils.formatDateSafe(d);
+        },
+        getToday: () => Utils.formatDateSafe(new Date()),
+        diffDays: (d1Str, d2Str) => {
+          const d1 = Utils.parseDateSafe(d1Str),
+            d2 = Utils.parseDateSafe(d2Str);
+          if (Number.isNaN(d1.getTime()) || Number.isNaN(d2.getTime()))
+            return 0;
+          return Math.max(
+            0,
+            Math.ceil((d2.getTime() - d1.getTime()) / (1000 * 60 * 60 * 24)),
+          );
+        },
+        calcEA: (tasaAnual, tipoTasa) => {
+          if (tasaAnual <= 0) return 0;
+          return tipoTasa === "ea"
+            ? tasaAnual
+            : (Math.pow(1 + tasaAnual / 100 / 12, 12) - 1) * 100;
+        },
+        calcTasaDiaria: (eaP) =>
+          eaP <= 0 ? 0 : Math.pow(1 + eaP / 100, 1 / 365) - 1,
+        calcTasaPeriodica: (eaP, freq) => {
+          if (eaP <= 0) return 0;
+          const iM = Math.pow(1 + eaP / 100, 1 / 12) - 1;
+          if (freq === "quincenal") return Math.pow(1 + iM, 1 / 2) - 1;
+          if (freq === "semanal") return Math.pow(1 + iM, 1 / 4) - 1;
+          return iM;
+        },
+        calcCuota: (P, i, n) => {
+          if (n <= 0) return 0;
+          if (i <= 0) return P / n;
+          return (P * i) / (1 - Math.pow(1 + i, -n));
+        },
+        generateUUID: () => Math.random().toString(36).substring(2, 15),
+      };
+
+      const Store = {
+        key: "prestamos_app_v50",
+        getData: () => {
+          // Migración automática desde v42 si existe
+          let d = JSON.parse(localStorage.getItem("prestamos_app_v50"));
+          if (!d) {
+            const oldD = JSON.parse(localStorage.getItem("prestamos_app_v42"));
+            d = oldD || {
+              loans: [],
+              config: {
+                usura: 31.5,
+                usuraMes: "",
+                lastBackup: Utils.getToday(),
+              },
+            };
+            localStorage.setItem("prestamos_app_v50", JSON.stringify(d));
+          }
+          return d;
+        },
+        saveData: (data) =>
+          localStorage.setItem(Store.key, JSON.stringify(data)),
+        getLoan: (id) => Store.getData().loans.find((l) => l.id === id),
+        saveLoan: (loan) => {
+          const d = Store.getData();
+          const idx = d.loans.findIndex((l) => l.id === loan.id);
+          if (idx >= 0) d.loans[idx] = loan;
+          else d.loans.push(loan);
+          Store.saveData(d);
+        },
+        deleteLoan: (id) => {
+          const d = Store.getData();
+          d.loans = d.loans.filter((l) => l.id !== id);
+          Store.saveData(d);
+        },
+      };
+
+      const Core = {
+        analyzeStatus: (loan) => {
+          const config = Store.getData().config,
+            hoy = Utils.getToday();
+          if (loan.tipo === "solo_capital") {
+            const capPagado = loan.pagos.reduce((s, p) => s + p.monto, 0),
+              capVigente = Math.max(0, loan.capital - capPagado);
+            return {
+              capitalVigente: capVigente,
+              intAcumulado: 0,
+              intMora: 0,
+              seguroAcumulado: 0,
+              totalHoy: capVigente,
+              cuotasMora: [],
+              proxFecha: "-",
+              estadoColor: capVigente <= 0 ? "pagado" : "solocap",
+              diasMoraMax: 0,
+              cuotaActual: null,
+              renovable: false,
+              score: 5,
+            };
+          }
+
+          let capVigente = loan.capital,
+            ultimaF = loan.fechaDesembolso,
+            cMora = [],
+            iAcum = 0,
+            iMora = 0,
+            sAcum = 0,
+            cActual = null;
+          const ea = Utils.calcEA(loan.tasaAnual, loan.tasaTipo),
+            i_d = Utils.calcTasaDiaria(ea);
+          let i_m_d =
+            loan.moraTipo === "usura"
+              ? Utils.calcTasaDiaria(config.usura)
+              : loan.moraTipo === "custom"
+                ? Utils.calcTasaDiaria(loan.moraTasa)
+                : loan.moraTipo === "cero"
+                  ? 0
+                  : i_d * 1.5;
+
+          let cuotasPendientes = 0;
+
+          for (let c of loan.tabla) {
+            if (c.estado === "pagada") {
+              capVigente = c.saldoFinal;
+              ultimaF = c.fecha;
+            } else {
+              cuotasPendientes++;
+              if (!cActual) cActual = c;
+              if (c.fecha < hoy) {
+                const dV = Utils.diffDays(c.fecha, hoy);
+                if (dV > (loan.diasGracia || 0)) {
+                  cMora.push(c);
+                  if (!loan.pausado && !app.state.moraOverrideZero)
+                    iMora += c.capital * i_m_d * dV;
+                }
+                iAcum += c.interes;
+                sAcum += loan.seguroPorCuota;
+                ultimaF = c.fecha;
+              }
+            }
+          }
+          if (cActual && cActual.fecha >= hoy && !loan.pausado) {
+            const dT = Utils.diffDays(ultimaF, hoy);
+            iAcum += capVigente * i_d * dT;
+            sAcum += loan.seguroPorCuota;
+          }
+          let tHoy =
+            capVigente > 0
+              ? iAcum +
+                iMora +
+                sAcum +
+                (cMora.length > 0
+                  ? cMora.reduce((s, c) => s + c.capital, 0)
+                  : cActual
+                    ? cActual.capital
+                    : 0)
+              : 0;
+          let eCol = "activo",
+            pF = cActual ? cActual.fecha : "-";
+          if (capVigente <= 0) eCol = "pagado";
+          else if (loan.pausado) eCol = "pausado";
+          else if (cMora.length > 0) eCol = "mora";
+          else if (cActual && Utils.diffDays(hoy, cActual.fecha) <= 3)
+            eCol = "alerta";
+
+          // Cálculo de Score: 5 estrellas menos 1 estrella por cada 15 días de mora histórica acumulada (hasta un mínimo de 1)
+          let historicoDiasMora = 0;
+          loan.pagos.forEach((p) => {
+            if (p.detalle && p.detalle.mora > 0)
+              historicoDiasMora += 5; /* Estimación rápida si pagó mora */
+          });
+          let currentMora =
+            cMora.length > 0 ? Utils.diffDays(cMora[0].fecha, hoy) : 0;
+          let score = Math.max(
+            1,
+            5 - Math.floor((historicoDiasMora + currentMora) / 15),
+          );
+          if (loan.cliente.nombre === "Flako") score = 5; // Respeto al acuerdo de pausa
+
+          // Alerta de Renovación: Si quedan 2 cuotas o menos y no está en mora
+          let renovable =
+            cuotasPendientes > 0 &&
+            cuotasPendientes <= 2 &&
+            capVigente > 0 &&
+            eCol !== "mora";
+
+          return {
+            capitalVigente: capVigente,
+            intAcumulado: iAcum,
+            intMora: iMora,
+            seguroAcumulado: sAcum,
+            totalHoy: tHoy,
+            cuotasMora: cMora,
+            proxFecha: pF,
+            estadoColor: eCol,
+            diasMoraMax: currentMora,
+            cuotaActual: cActual,
+            renovable,
+            score,
+          };
+        },
+        generateTable: (P, i, n, fIni, freq, seguro) => {
+          if (n <= 0 || P <= 0) return [];
+          const c = Utils.calcCuota(P, i, n);
+          let tabla = [],
+            s = P,
+            f = fIni;
+          for (let j = 1; j <= n; j++) {
+            f =
+              freq === "mensual"
+                ? Utils.addMonths(f, 1)
+                : freq === "quincenal"
+                  ? Utils.addDays(f, 15)
+                  : Utils.addDays(f, 7);
+            let int = s * i,
+              cap = c - int;
+            s -= cap;
+            if (s < 0.1) s = 0;
+            tabla.push({
+              n: j,
+              fecha: f,
+              cuota: c + seguro,
+              capital: cap,
+              interes: int,
+              seguro: seguro,
+              saldoFinal: Math.max(0, s),
+              estado: "pendiente",
+              pagoAcumulado: 0,
+            });
+          }
+          return tabla;
+        },
+      };
+
+      const app = {
+        state: {
+          view: "dashboard",
+          activeLoanId: null,
+          filter: "todos",
+          moraOverrideZero: false,
+        },
+        init: () => {
+          app.preloadClients();
+          app.checkUsuraAndBackup();
+          app.nav("dashboard");
+          setInterval(() => {
+            if (app.state.view === "detail") app.renderDetail();
+          }, 60000);
+        },
+
+        // PRECARGA DE FLAKO Y GLENYS
+        preloadClients: () => {
+          let data = Store.getData();
+          if (data.loans.length === 0) {
+            const gCap = 20000000,
+              gTasa = 19,
+              gPlazo = 32,
+              gFIni = "2026-04-01",
+              gEA = Utils.calcEA(gTasa, "nmv"),
+              gI = Utils.calcTasaPeriodica(gEA, "mensual");
+            data.loans.push({
+              id: Utils.generateUUID(),
+              tipo: "normal",
+              fechaCreacion: Utils.getToday(),
+              cliente: { nombre: "Glenys", cedula: "", telefono: "" },
+              capital: gCap,
+              fechaDesembolso: gFIni,
+              tasaAnual: gTasa,
+              tasaTipo: "nmv",
+              plazo: gPlazo,
+              frecuencia: "mensual",
+              seguroPorCuota: 0,
+              cuotaFija: Utils.calcCuota(gCap, gI, gPlazo),
+              diasGracia: 0,
+              moraTipo: "cero",
+              moraTasa: 0,
+              tabla: Core.generateTable(gCap, gI, gPlazo, gFIni, "mensual", 0),
+              pagos: [],
+              notas: [
+                {
+                  fecha: Utils.getToday(),
+                  txt: "Crédito precargado desde historial inicial.",
+                },
+              ],
+              pausado: false,
+            });
+
+            const fCap = 10689002,
+              fTasa = 18,
+              fPlazo = 34,
+              fFIni = "2024-06-18",
+              fEA = Utils.calcEA(fTasa, "nmv"),
+              fI = Utils.calcTasaPeriodica(fEA, "mensual"),
+              fTabla = Core.generateTable(
+                fCap,
+                fI,
+                fPlazo,
+                fFIni,
+                "mensual",
+                0,
+              ),
+              fCuota = Utils.calcCuota(fCap, fI, fPlazo);
+            let fPagos = [];
+            for (let i = 0; i < 14; i++) {
+              fTabla[i].estado = "pagada";
+              fTabla[i].pagoAcumulado = fTabla[i].capital;
+              fPagos.push({
+                id: Utils.generateUUID(),
+                fecha: fTabla[i].fecha,
+                monto: fCuota,
+                cuenta: "Efectivo",
+                cuotaNumero: fTabla[i].n,
+                detalle: {
+                  mora: 0,
+                  interes: fTabla[i].interes,
+                  seguro: 0,
+                  capital: fTabla[i].capital,
+                },
+                tipo: "cuota",
+              });
+            }
+            data.loans.push({
+              id: Utils.generateUUID(),
+              tipo: "normal",
+              fechaCreacion: Utils.getToday(),
+              cliente: { nombre: "Flako", cedula: "", telefono: "" },
+              capital: fCap,
+              fechaDesembolso: fFIni,
+              tasaAnual: fTasa,
+              tasaTipo: "nmv",
+              plazo: fPlazo,
+              frecuencia: "mensual",
+              seguroPorCuota: 0,
+              cuotaFija: fCuota,
+              diasGracia: 0,
+              moraTipo: "cero",
+              moraTasa: 0,
+              tabla: fTabla,
+              pagos: fPagos,
+              notas: [
+                {
+                  fecha: Utils.getToday(),
+                  txt: "Crédito precargado. 14 cuotas simuladas como pagadas.",
+                },
+              ],
+              pausado: false,
+            });
+            Store.saveData(data);
+          }
+        },
+
+        getRawVal: (id) => {
+          const el = document.getElementById(id);
+          if (!el || !el.value) return 0;
+          return parseFloat(el.value.replace(/\D/g, "")) || 0;
+        },
+        formatInput: (e) => {
+          let v = e.target.value.replace(/\D/g, "");
+          e.target.value = v
+            ? new Intl.NumberFormat("es-CO").format(parseInt(v))
+            : "";
+          if (["form-capital", "form-seguro"].includes(e.target.id))
+            app.previewLoan();
+          if (e.target.id === "pago-monto") app.calcPaymentDistribution();
+          if (e.target.id === "extra-monto") app.simulateExtra();
+        },
+
+        checkUsuraAndBackup: () => {
+          let d = Store.getData();
+          const mAct = Utils.getToday().substring(0, 7);
+          if (d.config.usuraMes !== mAct) {
+            let u = prompt(
+              `Ingresa la Tasa de Usura (EA %) para este mes (${mAct}):`,
+              d.config.usura,
+            );
+            if (u && !isNaN(u)) {
+              d.config.usura = parseFloat(u);
+              d.config.usuraMes = mAct;
+              Store.saveData(d);
+            }
+          }
+          if (Utils.diffDays(d.config.lastBackup, Utils.getToday()) >= 7) {
+            d.config.lastBackup = Utils.getToday();
+            Store.saveData(d);
+            alert("Realizando backup automático semanal.");
+            app.exportData();
+          }
+        },
+        nav: (view) => {
+          document
+            .querySelectorAll(".container")
+            .forEach((c) => c.classList.add("hidden"));
+          document.getElementById(`view-${view}`).classList.remove("hidden");
+          document
+            .querySelectorAll(".nav-item")
+            .forEach((n) => n.classList.remove("active"));
+          if (document.getElementById(`nav-${view}`))
+            document.getElementById(`nav-${view}`).classList.add("active");
+          app.state.view = view;
+          window.scrollTo(0, 0);
+          if (view === "dashboard") app.renderDashboard();
+          if (view === "create") app.setLoanType("normal");
+        },
+        setFilter: (f, el) => {
+          app.state.filter = f;
+          document
+            .querySelectorAll(".chip")
+            .forEach((c) => c.classList.remove("active"));
+          el.classList.add("active");
+          app.renderDashboard();
+        },
+
+        renderDashboard: () => {
+          const data = Store.getData().loans,
+            term = document.getElementById("search-input").value.toLowerCase();
+          const list = document.getElementById("loans-list");
+          list.innerHTML = "";
+
+          let tCar = 0,
+            tMor = 0,
+            act = 0,
+            fCaja = 0,
+            capMor = 0,
+            mAct = Utils.getToday().substring(0, 7);
+          let tCapRecuperado = 0,
+            tInteresesGanados = 0; // NUEVA CAJA DE INTERESES
+
+          data.forEach((l) => {
+            const st = Core.analyzeStatus(l);
+            if (st.capitalVigente > 0) {
+              tCar += st.capitalVigente;
+              act++;
+            }
+            let mParcial = st.cuotasMora.reduce((s, c) => s + c.capital, 0);
+            tMor += st.intMora + mParcial;
+            if (mParcial > 0) capMor += st.capitalVigente;
+
+            // Separación de Capital Recuperado e Intereses Ganados
+            l.pagos.forEach((p) => {
+              if (p.detalle) {
+                tCapRecuperado += p.detalle.capital || 0;
+                tInteresesGanados +=
+                  (p.detalle.interes || 0) + (p.detalle.mora || 0);
+              }
+            });
+
+            if (l.tipo !== "solo_capital")
+              l.tabla.forEach((c) => {
+                if (
+                  c.estado === "pendiente" &&
+                  c.fecha.substring(0, 7) === mAct
+                )
+                  fCaja += c.cuota;
+              });
+            if (
+              term &&
+              !l.cliente.nombre.toLowerCase().includes(term) &&
+              !(l.cliente.cedula || "").includes(term)
+            )
+              return;
+
+            const f = app.state.filter;
+            if (
+              f === "activo" &&
+              st.estadoColor !== "activo" &&
+              st.estadoColor !== "alerta"
+            )
+              return;
+            if (f === "mora" && st.estadoColor !== "mora") return;
+            if (f === "pausado" && st.estadoColor !== "pausado") return;
+            if (f === "solo_capital" && st.estadoColor !== "solocap") return;
+            if (f === "pagado" && st.estadoColor !== "pagado") return;
+            if (f === "renovar" && !st.renovable) return;
+            if (f === "preventivo") {
+              const hoy = Utils.getToday();
+              const diasProx = Utils.diffDays(hoy, st.proxFecha);
+              if (
+                st.proxFecha < hoy ||
+                diasProx > 7 ||
+                st.estadoColor === "pagado"
+              )
+                return;
+            }
+
+            const pct =
+              l.tipo === "solo_capital"
+                ? ((l.capital - st.capitalVigente) / l.capital) * 100
+                : (l.tabla.filter((c) => c.estado === "pagada").length /
+                    l.plazo) *
+                  100;
+
+            let stars =
+              "⭐".repeat(st.score) +
+              '<span style="color:#444">⭐</span>'.repeat(5 - st.score);
+            let renewBadge = st.renovable
+              ? `<span class="status-badge status-renovar ml-1" style="font-size:0.6rem">¡Renovar!</span>`
+              : "";
+
+            list.innerHTML += `
+                    <div class="card loan-card" onclick="app.openDetail('${l.id}')">
+                        <div class="flex justify-between items-center mb-1">
+                            <div class="font-bold">${l.cliente.nombre} <div class="score-stars mt-1" style="margin-top:0.2rem">${stars}</div></div>
+                            <div class="flex-col text-right">
+                                <div class="status-badge status-${st.estadoColor} mb-1">${st.estadoColor === "solocap" ? "S. CAPITAL" : st.estadoColor.toUpperCase()}</div>
+                                ${renewBadge}
+                            </div>
+                        </div>
+                        <div class="text-sm text-muted mb-1">${l.cliente.cedula ? "C.C. " + l.cliente.cedula : ""}</div>
+                        <div class="flex justify-between items-center">
+                            <div class="big-amount" style="font-size: 1.2rem;">${Utils.formatCOP(st.capitalVigente)}</div>
+                            <div class="text-sm text-right"><span class="text-muted">Próx:</span> ${st.proxFecha}</div>
+                        </div>
+                        <div class="progress-bar"><div class="progress-fill" style="width: ${pct}%"></div></div>
+                    </div>`;
+          });
+
+          document.getElementById("dash-cartera").innerText =
+            Utils.formatCOP(tCar);
+          document.getElementById("dash-mora").innerText =
+            Utils.formatCOP(tMor);
+          document.getElementById("dash-activos").innerText = act;
+          document.getElementById("dash-cap-recup").innerText =
+            Utils.formatCOP(tCapRecuperado); // NUEVO
+          document.getElementById("dash-profit").innerText =
+            Utils.formatCOP(tInteresesGanados);
+          document.getElementById("dash-flujo").innerText =
+            Utils.formatCOP(fCaja);
+
+          let pSano = tCar > 0 ? ((tCar - capMor) / tCar) * 100 : 100;
+          document.getElementById("dash-bar-sano").style.width = `${pSano}%`;
+          document.getElementById("dash-bar-mora").style.width =
+            `${100 - pSano}%`;
+          let hlText = document.getElementById("dash-health-text");
+          hlText.innerText = `${pSano.toFixed(1)}% Sano`;
+          hlText.className =
+            pSano > 80 ? "font-bold text-success" : "font-bold text-danger";
+        },
+
+        setLoanType: (t) => {
+          document
+            .getElementById("chip-t-normal")
+            .classList.toggle("active", t === "normal");
+          document
+            .getElementById("chip-t-capital")
+            .classList.toggle("active", t === "solo_capital");
+          document
+            .getElementById("form-normal")
+            .classList.toggle("hidden", t !== "normal");
+          document
+            .getElementById("form-capital-only")
+            .classList.toggle("hidden", t !== "solo_capital");
+          if (t === "normal") {
+            document.getElementById("form-fecha").value = Utils.getToday();
+            app.wizardNext(1);
+          } else document.getElementById("sc-fecha").value = Utils.getToday();
+        },
+        wizardNext: (s) => {
+          document
+            .querySelectorAll(".wizard-pane")
+            .forEach((p) => p.classList.remove("active"));
+          document
+            .querySelectorAll(".step-dot")
+            .forEach((d) => d.classList.remove("active"));
+          document.getElementById(`wizard-${s}`).classList.add("active");
+          for (let i = 1; i <= s; i++)
+            document.getElementById(`dot-${i}`).classList.add("active");
+          if (s === 3) app.renderPreviewTable();
+        },
+        toggleCustomMora: () => {
+          document
+            .getElementById("box-mora-custom")
+            .classList.toggle(
+              "hidden",
+              document.getElementById("form-tmora").value !== "custom",
+            );
+        },
+        previewLoan: () => {
+          const P = app.getRawVal("form-capital"),
+            n = parseInt(document.getElementById("form-plazo").value) || 0;
+          if (P <= 0 || n <= 0) {
+            document.getElementById("preview-cuota").innerText = "$0";
+            document.getElementById("preview-totales").innerText =
+              "Total a pagar: $0 | Intereses: $0";
+            return;
+          }
+          const tasa =
+              parseFloat(
+                document.getElementById("form-tasa").value.replace(",", "."),
+              ) || 0,
+            tt = document.getElementById("form-ttasa").value,
+            freq = document.getElementById("form-freq").value,
+            seg = app.getRawVal("form-seguro");
+          const ea = Utils.calcEA(tasa, tt);
+          document
+            .getElementById("usura-warning")
+            .classList.toggle("hidden", ea <= Store.getData().config.usura);
+          const i = Utils.calcTasaPeriodica(ea, freq),
+            c = Utils.calcCuota(P, i, n);
+          document.getElementById("preview-cuota").innerText = Utils.formatCOP(
+            c + seg,
+          );
+          document.getElementById("preview-totales").innerText =
+            `Total: ${Utils.formatCOP((c + seg) * n)} | Intereses: ${Utils.formatCOP((c + seg) * n - P - seg * n)}`;
+        },
+        renderPreviewTable: () => {
+          const P = app.getRawVal("form-capital"),
+            n = parseInt(document.getElementById("form-plazo").value) || 0;
+          const tbody = document.querySelector("#preview-table tbody");
+          tbody.innerHTML = "";
+          if (P <= 0 || n <= 0) return;
+          const tasa =
+              parseFloat(
+                document.getElementById("form-tasa").value.replace(",", "."),
+              ) || 0,
+            tt = document.getElementById("form-ttasa").value,
+            freq = document.getElementById("form-freq").value,
+            seg = app.getRawVal("form-seguro"),
+            fIni =
+              document.getElementById("form-fecha").value || Utils.getToday();
+          const i = Utils.calcTasaPeriodica(Utils.calcEA(tasa, tt), freq),
+            tabla = Core.generateTable(P, i, n, fIni, freq, seg);
+          tabla.forEach(
+            (r) =>
+              (tbody.innerHTML += `<tr><td>${r.n}</td><td>${r.fecha}</td><td class="currency">${Utils.formatCOP(r.cuota)}</td><td class="currency">${Utils.formatCOP(r.capital)}</td><td class="currency">${Utils.formatCOP(r.interes)}</td><td class="currency">${Utils.formatCOP(r.saldoFinal)}</td></tr>`),
+          );
+        },
+        createLoan: () => {
+          const cli = {
+            nombre: document.getElementById("form-nombre").value,
+            cedula: document.getElementById("form-cedula").value,
+            telefono: document.getElementById("form-telefono").value,
+          };
+          if (!cli.nombre) return alert("Nombre obligatorio");
+          const P = app.getRawVal("form-capital"),
+            n = parseInt(document.getElementById("form-plazo").value),
+            fIni = document.getElementById("form-fecha").value;
+          if (!P || !n || !fIni) return alert("Complete los datos financieros");
+          const tasa =
+              parseFloat(
+                document.getElementById("form-tasa").value.replace(",", "."),
+              ) || 0,
+            tt = document.getElementById("form-ttasa").value,
+            freq = document.getElementById("form-freq").value,
+            seg = app.getRawVal("form-seguro");
+          const mTipo = document.getElementById("form-tmora").value,
+            mTasa =
+              parseFloat(document.getElementById("form-mora-tasa").value) || 0,
+            dGracia =
+              parseInt(document.getElementById("form-gracia").value) || 0;
+          const ea = Utils.calcEA(tasa, tt),
+            i = Utils.calcTasaPeriodica(ea, freq),
+            c = Utils.calcCuota(P, i, n),
+            tabla = Core.generateTable(P, i, n, fIni, freq, seg),
+            notaIni = document.getElementById("form-notas").value.trim();
+          Store.saveLoan({
+            id: Utils.generateUUID(),
+            tipo: "normal",
+            fechaCreacion: Utils.getToday(),
+            cliente: cli,
+            garantia: document.getElementById("form-garantia").value,
+            capital: P,
+            fechaDesembolso: fIni,
+            tasaAnual: tasa,
+            tasaTipo: tt,
+            plazo: n,
+            frecuencia: freq,
+            seguroPorCuota: seg,
+            cuotaFija: c + seg,
+            diasGracia: dGracia,
+            moraTipo: mTipo,
+            moraTasa: mTasa,
+            tabla,
+            pagos: [],
+            notas: notaIni ? [{ fecha: Utils.getToday(), txt: notaIni }] : [],
+            pausado: false,
+          });
+          alert("Préstamo creado");
+          app.nav("dashboard");
+        },
+        createSoloCapital: () => {
+          const cli = {
+            nombre: document.getElementById("sc-nombre").value,
+            cedula: document.getElementById("sc-cedula").value,
+            telefono: document.getElementById("sc-tel").value,
+          };
+          if (!cli.nombre) return alert("Nombre obligatorio");
+          const P = app.getRawVal("sc-capital"),
+            fIni = document.getElementById("sc-fecha").value,
+            nota = document.getElementById("sc-notas").value.trim();
+          if (!P || !fIni) return alert("Faltan datos financieros");
+          Store.saveLoan({
+            id: Utils.generateUUID(),
+            tipo: "solo_capital",
+            fechaCreacion: Utils.getToday(),
+            cliente: cli,
+            capital: P,
+            pagos: [],
+            notas: nota ? [{ fecha: Utils.getToday(), txt: nota }] : [],
+          });
+          alert("Préstamo Especial creado.");
+          app.nav("dashboard");
+        },
+
+        openDetail: (id) => {
+          app.state.activeLoanId = id;
+          app.state.moraOverrideZero = false;
+          app.nav("detail");
+          app.renderDetail();
+        },
+        renderDetail: () => {
+          const l = Store.getLoan(app.state.activeLoanId);
+          if (!l) return app.nav("dashboard");
+          const st = Core.analyzeStatus(l);
+          app.state.currentAnalysis = st;
+
+          document.getElementById("det-name").innerText = l.cliente.nombre;
+          let stars =
+            "⭐".repeat(st.score) +
+            '<span style="color:#444">⭐</span>'.repeat(5 - st.score);
+          document.getElementById("det-score").innerHTML = stars;
+
+          document.getElementById("det-status").className =
+            `status-badge status-${st.estadoColor} mb-1`;
+          document.getElementById("det-status").innerText =
+            st.estadoColor === "solocap"
+              ? "S. CAPITAL"
+              : st.estadoColor.toUpperCase();
+
+          document
+            .getElementById("det-renovar-badge")
+            .classList.toggle("hidden", !st.renovable);
+
+          document.getElementById("det-total-hoy").innerText = Utils.formatCOP(
+            st.totalHoy,
+          );
+          document.getElementById("det-saldo-cap").innerText = Utils.formatCOP(
+            st.capitalVigente,
+          );
+          const iSC = l.tipo === "solo_capital";
+          document
+            .getElementById("row-int-cor")
+            .classList.toggle("hidden", iSC);
+          document
+            .getElementById("row-seguros")
+            .classList.toggle("hidden", iSC);
+          document
+            .getElementById("row-prox-fecha")
+            .classList.toggle("hidden", iSC);
+          document
+            .getElementById("det-tabla-container")
+            .classList.toggle("hidden", iSC);
+          document.getElementById("btn-pausar").classList.toggle("hidden", iSC);
+          document
+            .getElementById("btn-export-est")
+            .classList.toggle("hidden", iSC);
+          document
+            .getElementById("det-actions-main")
+            .classList.toggle("hidden", st.capitalVigente <= 0);
+          document
+            .getElementById("det-actions-sec")
+            .classList.toggle("hidden", st.capitalVigente <= 0);
+          document
+            .getElementById("det-actions-paid")
+            .classList.toggle("hidden", st.capitalVigente > 0);
+          document
+            .getElementById("det-wa-box")
+            .classList.toggle(
+              "hidden",
+              st.capitalVigente <= 0 || !l.cliente.telefono,
+            );
+          if (!iSC) {
+            document.getElementById("det-int-acum").innerText = Utils.formatCOP(
+              st.intAcumulado,
+            );
+            document.getElementById("det-seguros").innerText = Utils.formatCOP(
+              st.seguroAcumulado,
+            );
+            document.getElementById("det-prox-fecha").innerText = st.proxFecha;
+            document.getElementById("btn-pausar").innerText = l.pausado
+              ? "Reanudar"
+              : "Pausar";
+            if (st.intMora > 0) {
+              document
+                .getElementById("row-int-mora")
+                .classList.remove("hidden");
+              document.getElementById("det-int-mora").innerText =
+                Utils.formatCOP(st.intMora);
+              document.getElementById("det-mora-alert").innerText =
+                `¡${st.diasMoraMax} días en mora!`;
+            } else {
+              document.getElementById("row-int-mora").classList.add("hidden");
+              document.getElementById("det-mora-alert").innerText = "";
+            }
+            const tb = document.querySelector("#det-table tbody");
+            tb.innerHTML = "";
+            let pagadas = 0;
+            l.tabla.forEach((r) => {
+              let cls = "";
+              if (r.estado === "pagada") {
+                cls = "row-pagada";
+                pagadas++;
+              } else if (r.fecha < Utils.getToday()) cls = "row-mora";
+              else if (st.cuotaActual && r.n === st.cuotaActual.n)
+                cls = "row-actual";
+              tb.innerHTML += `<tr class="${cls}"><td>${r.n} ${r.estado === "pagada" ? "✓" : ""}</td><td>${r.fecha}</td><td class="currency">${Utils.formatCOP(r.cuota)}</td><td class="currency">${Utils.formatCOP(r.capital)}</td><td class="currency">${Utils.formatCOP(r.interes)}</td><td class="currency">${Utils.formatCOP(r.seguro)}</td><td class="currency">${Utils.formatCOP(r.saldoFinal)}</td></tr>`;
+            });
+            document.getElementById("det-progreso").innerText =
+              `${pagadas}/${l.plazo}`;
+          }
+          let iHtml = `<div><b>Cédula:</b> ${l.cliente.cedula || "-"} | <b>Tel:</b> ${l.cliente.telefono || "-"}</div><div><b>Capital:</b> ${Utils.formatCOP(l.capital)}</div>`;
+          if (!iSC)
+            iHtml += `<div><b>Tasa:</b> ${l.tasaAnual}% ${l.tasaTipo.toUpperCase()} | <b>Freq:</b> ${l.frecuencia}</div>`;
+          if (l.garantia) iHtml += `<div><b>Garantía:</b> ${l.garantia}</div>`;
+          document.getElementById("det-info-html").innerHTML = iHtml;
+          const nList = document.getElementById("det-notas-list");
+          nList.innerHTML = "";
+          (l.notas || []).forEach(
+            (n) =>
+              (nList.innerHTML += `<div class="note-card"><div class="text-xs text-muted">${n.fecha}</div>${n.txt}</div>`),
+          );
+
+          const th = document.querySelector("#det-history tbody");
+          th.innerHTML = "";
+          [...(l.pagos || [])].reverse().forEach((p) => {
+            let cBadge = p.cuenta
+              ? `<span style="font-size:0.65rem; background:rgba(255,255,255,0.1); padding:2px 6px; border-radius:10px;">${p.cuenta}</span>`
+              : "-";
+            th.innerHTML += `<tr><td>${p.fecha}</td><td class="currency text-success">+${Utils.formatCOP(p.monto)}</td><td class="text-sm">${cBadge}</td><td><button class="btn btn-primary" style="padding:0.2rem 0.5rem" onclick="app.printReceipt('${p.id}')">Ver</button></td></tr>`;
+          });
+        },
+        togglePause: () => {
+          const l = Store.getLoan(app.state.activeLoanId);
+          l.pausado = !l.pausado;
+          Store.saveLoan(l);
+          app.renderDetail();
+        },
+        addNote: () => {
+          const txt = document.getElementById("nueva-nota").value.trim();
+          if (!txt) return;
+          const l = Store.getLoan(app.state.activeLoanId);
+          l.notas = l.notas || [];
+          l.notas.push({ fecha: Utils.getToday(), txt });
+          Store.saveLoan(l);
+          document.getElementById("nueva-nota").value = "";
+          app.renderDetail();
+        },
+        deleteLoan: () => {
+          if (confirm("¿Eliminar permanente?")) {
+            Store.deleteLoan(app.state.activeLoanId);
+            app.nav("dashboard");
+          }
+        },
+        sendWA: (t) => {
+          const l = Store.getLoan(app.state.activeLoanId),
+            st = app.state.currentAnalysis;
+          if (!l.cliente.telefono) return alert("No hay teléfono.");
+          let msg =
+            t === "preventivo"
+              ? `Hola ${l.cliente.nombre},\n\nTe recordamos que tu próxima cuota por valor de *${Utils.formatCOP(st.cuotaActual ? st.cuotaActual.cuota : 0)}* vence el próximo *${st.proxFecha}*.\n\nEvita recargos por mora. ¡Gracias!`
+              : `Hola ${l.cliente.nombre},\n\nTu cuota está *vencida*. Tienes ${st.diasMoraMax} días de mora. El saldo a pagar hoy es *${Utils.formatCOP(st.totalHoy)}*.\n\nPor favor ponte al día para evitar costos adicionales.`;
+          window.open(
+            `https://wa.me/57${l.cliente.telefono.replace(/\s+/g, "")}?text=${encodeURIComponent(msg)}`,
+            "_blank",
+          );
+        },
+
+        zeroMoraOverride: () => {
+          app.state.moraOverrideZero = true;
+          app.renderDetail();
+          app.openPaymentModal();
+        },
+        openPaymentModal: () => {
+          const st = app.state.currentAnalysis,
+            iSC = Store.getLoan(app.state.activeLoanId).tipo === "solo_capital";
+          document.getElementById("pago-titulo").innerText = iSC
+            ? "Abono a Capital"
+            : "Registrar Pago";
+          document
+            .getElementById("pago-dist-box")
+            .classList.toggle("hidden", iSC);
+          document.getElementById("pago-excedente-box").classList.add("hidden");
+          document.getElementById("pago-fecha").value = Utils.getToday();
+          document.getElementById("pago-monto").value = Math.round(st.totalHoy);
+          app.formatInput({ target: document.getElementById("pago-monto") });
+          if (!iSC) app.calcPaymentDistribution();
+          document.getElementById("modal-pago").classList.add("active");
+        },
+        closeModal: (id) => {
+          document.getElementById(id).classList.remove("active");
+          if (id === "modal-pago") app.state.moraOverrideZero = false;
+        },
+        calcPaymentDistribution: () => {
+          const monto = app.getRawVal("pago-monto"),
+            st = app.state.currentAnalysis;
+          let rem = monto,
+            mora = 0,
+            int = 0,
+            seg = 0,
+            cap = 0;
+          if (rem >= st.intMora) {
+            mora = st.intMora;
+            rem -= mora;
+          } else {
+            mora = rem;
+            rem = 0;
+          }
+          if (rem >= st.intAcumulado) {
+            int = st.intAcumulado;
+            rem -= int;
+          } else {
+            int = rem;
+            rem = 0;
+          }
+          if (rem >= st.seguroAcumulado) {
+            seg = st.seguroAcumulado;
+            rem -= seg;
+          } else {
+            seg = rem;
+            rem = 0;
+          }
+          cap = rem;
+          document
+            .getElementById("dist-mora-row")
+            .classList.toggle("hidden", mora <= 0);
+          document.getElementById("dist-mora").innerText =
+            Utils.formatCOP(mora);
+          document.getElementById("dist-int").innerText = Utils.formatCOP(int);
+          document.getElementById("dist-seg").innerText = Utils.formatCOP(seg);
+          const reqHoy = Math.round(st.totalHoy);
+          if (
+            monto > reqHoy &&
+            reqHoy > 0 &&
+            Store.getLoan(app.state.activeLoanId).tipo !== "solo_capital"
+          ) {
+            document.getElementById("dist-cap").innerText =
+              Utils.formatCOP(reqHoy - mora - int - seg) + " (Cuotas)";
+            document
+              .getElementById("pago-excedente-box")
+              .classList.remove("hidden");
+            document.getElementById("excedente-val").innerText =
+              Utils.formatCOP(monto - reqHoy);
+          } else {
+            document.getElementById("dist-cap").innerText =
+              Utils.formatCOP(cap);
+            document
+              .getElementById("pago-excedente-box")
+              .classList.add("hidden");
+          }
+          document.getElementById("dist-nuevo-saldo").innerText =
+            Utils.formatCOP(Math.max(0, st.capitalVigente - cap));
+        },
+        confirmPayment: () => {
+          const loan = Store.getLoan(app.state.activeLoanId),
+            st = app.state.currentAnalysis,
+            fecha = document.getElementById("pago-fecha").value,
+            monto = app.getRawVal("pago-monto");
+          const cuentaSel = document.getElementById("pago-cuenta").value; // NUEVO
+          if (!monto || monto <= 0) return alert("Ingrese un monto válido");
+          let pagoRegular = monto,
+            excedente = 0,
+            reqHoy = Math.round(st.totalHoy);
+          if (loan.tipo === "solo_capital") {
+            if (monto > st.capitalVigente) return alert("Monto excede saldo.");
+            loan.pagos.push({
+              id: Utils.generateUUID(),
+              fecha,
+              monto,
+              cuenta: cuentaSel,
+              cuotaNumero: "-",
+              detalle: { mora: 0, interes: 0, seguro: 0, capital: monto },
+              tipo: "abono_sc",
+            });
+          } else {
+            if (monto > reqHoy && reqHoy > 0) {
+              pagoRegular = reqHoy;
+              excedente = monto - reqHoy;
+            }
+            let rem = pagoRegular,
+              mora = 0,
+              int = 0,
+              seg = 0,
+              cap = 0;
+            if (rem >= st.intMora) {
+              mora = st.intMora;
+              rem -= mora;
+            } else {
+              mora = rem;
+              rem = 0;
+            }
+            if (rem >= st.intAcumulado) {
+              int = st.intAcumulado;
+              rem -= int;
+            } else {
+              int = rem;
+              rem = 0;
+            }
+            if (rem >= st.seguroAcumulado) {
+              seg = st.seguroAcumulado;
+              rem -= seg;
+            } else {
+              seg = rem;
+              rem = 0;
+            }
+            cap = rem;
+            let capPendiente = cap;
+            for (let c of loan.tabla) {
+              if (c.estado !== "pagada") {
+                let cF = c.capital - c.pagoAcumulado;
+                if (capPendiente >= cF) {
+                  capPendiente -= cF;
+                  c.pagoAcumulado = c.capital;
+                  c.estado = "pagada";
+                } else if (capPendiente > 0) {
+                  c.pagoAcumulado += capPendiente;
+                  capPendiente = 0;
+                }
+              }
+            }
+            loan.pagos.push({
+              id: Utils.generateUUID(),
+              fecha,
+              monto: pagoRegular,
+              cuenta: cuentaSel,
+              cuotaNumero: st.cuotaActual ? st.cuotaActual.n : "-",
+              detalle: { mora, interes: int, seguro: seg, capital: cap },
+              tipo: "cuota",
+            });
+
+            if (excedente > 0) {
+              const tExc = document.getElementById("pago-excedente-tipo").value,
+                nCap = st.capitalVigente - cap - excedente,
+                ea = Utils.calcEA(loan.tasaAnual, loan.tasaTipo),
+                i = Utils.calcTasaPeriodica(ea, loan.frecuencia);
+              let idxP = loan.tabla.findIndex((c) => c.estado !== "pagada");
+              if (idxP !== -1) {
+                let nTab = [];
+                if (tExc === "plazo") {
+                  let s = nCap,
+                    cf = loan.cuotaFija,
+                    f = loan.tabla[idxP].fecha,
+                    n = loan.tabla[idxP].n;
+                  while (s > 0.1) {
+                    let cint = s * i,
+                      ccap = cf - loan.seguroPorCuota - cint;
+                    if (ccap > s) ccap = s;
+                    s -= ccap;
+                    nTab.push({
+                      n,
+                      fecha: f,
+                      cuota: ccap + cint + loan.seguroPorCuota,
+                      capital: ccap,
+                      interes: cint,
+                      seguro: loan.seguroPorCuota,
+                      saldoFinal: Math.max(0, s),
+                      estado: "pendiente",
+                      pagoAcumulado: 0,
+                    });
+                    n++;
+                    f =
+                      loan.frecuencia === "mensual"
+                        ? Utils.addMonths(f, 1)
+                        : loan.frecuencia === "quincenal"
+                          ? Utils.addDays(f, 15)
+                          : Utils.addDays(f, 7);
+                  }
+                } else {
+                  const cRest = loan.tabla.length - idxP;
+                  let bDate = loan.tabla[idxP].fecha;
+                  bDate =
+                    loan.frecuencia === "mensual"
+                      ? Utils.addMonths(bDate, -1)
+                      : loan.frecuencia === "quincenal"
+                        ? Utils.addDays(bDate, -15)
+                        : Utils.addDays(bDate, -7);
+                  nTab = Core.generateTable(
+                    nCap,
+                    i,
+                    cRest,
+                    bDate,
+                    loan.frecuencia,
+                    loan.seguroPorCuota,
+                  );
+                  nTab.forEach((c, ix) => {
+                    c.n = loan.tabla[idxP].n + ix;
+                  });
+                }
+                loan.tabla = loan.tabla.slice(0, idxP).concat(nTab);
+                loan.plazo = loan.tabla.length;
+              }
+              loan.pagos.push({
+                id: Utils.generateUUID(),
+                fecha,
+                monto: excedente,
+                cuenta: cuentaSel,
+                cuotaNumero: "EXTRA",
+                detalle: { mora: 0, interes: 0, seguro: 0, capital: excedente },
+                tipo: "abono",
+              });
+            }
+          }
+          Store.saveLoan(loan);
+          app.state.moraOverrideZero = false;
+          app.closeModal("modal-pago");
+          app.renderDetail();
+        },
+
+        openExtraModal: () => {
+          const st = app.state.currentAnalysis;
+          if (Store.getLoan(app.state.activeLoanId).tipo === "solo_capital")
+            return alert("Use 'Registrar Pago'.");
+          if (st.intMora > 0 || st.intAcumulado > 0)
+            return alert(
+              "Pague los intereses acumulados con un 'Pago Regular' primero.",
+            );
+          document.getElementById("extra-fecha").value = Utils.getToday();
+          document.getElementById("extra-monto").value = "";
+          document.getElementById("extra-sim").classList.add("hidden");
+          document.getElementById("modal-extra").classList.add("active");
+        },
+        simulateExtra: () => {
+          const m = app.getRawVal("extra-monto"),
+            l = Store.getLoan(app.state.activeLoanId),
+            st = app.state.currentAnalysis,
+            sB = document.getElementById("extra-sim");
+          if (!m || m >= st.capitalVigente) {
+            sB.classList.add("hidden");
+            return;
+          }
+          const iAct = l.tabla
+              .filter((c) => c.estado !== "pagada")
+              .reduce((s, c) => s + c.interes, 0),
+            nCap = st.capitalVigente - m,
+            i = Utils.calcTasaPeriodica(
+              Utils.calcEA(l.tasaAnual, l.tasaTipo),
+              l.frecuencia,
+            );
+          let idxP = l.tabla.findIndex((c) => c.estado !== "pagada"),
+            nInt = 0;
+          if (idxP === -1) return;
+          if (document.getElementById("extra-tipo").value === "plazo") {
+            let s = nCap,
+              c = l.cuotaFija;
+            while (s > 0.1) {
+              let cint = s * i,
+                ccap = c - l.seguroPorCuota - cint;
+              if (ccap > s) ccap = s;
+              s -= ccap;
+              nInt += cint;
+            }
+          } else {
+            const cRest = l.tabla.length - idxP;
+            nInt = Utils.calcCuota(nCap, i, cRest) * cRest - nCap;
+          }
+          sB.innerText = `Ahorro en intereses: ${Utils.formatCOP(iAct - nInt)}`;
+          sB.classList.remove("hidden");
+        },
+        confirmExtraPayment: () => {
+          const l = Store.getLoan(app.state.activeLoanId),
+            f = document.getElementById("extra-fecha").value,
+            m = app.getRawVal("extra-monto"),
+            t = document.getElementById("extra-tipo").value,
+            st = app.state.currentAnalysis;
+          const cuentaSel = document.getElementById("extra-cuenta").value; // NUEVO
+          if (!m || m <= 0 || m > st.capitalVigente)
+            return alert("Monto inválido.");
+          const nCap = st.capitalVigente - m,
+            i = Utils.calcTasaPeriodica(
+              Utils.calcEA(l.tasaAnual, l.tasaTipo),
+              l.frecuencia,
+            );
+          let idxP = l.tabla.findIndex((c) => c.estado !== "pagada");
+          if (idxP === -1) return;
+          let nTab = [];
+          if (t === "plazo") {
+            let s = nCap,
+              cf = l.cuotaFija,
+              df = l.tabla[idxP].fecha,
+              n = l.tabla[idxP].n;
+            while (s > 0.1) {
+              let cint = s * i,
+                ccap = cf - l.seguroPorCuota - cint;
+              if (ccap > s) ccap = s;
+              s -= ccap;
+              nTab.push({
+                n,
+                fecha: df,
+                cuota: ccap + cint + l.seguroPorCuota,
+                capital: ccap,
+                interes: cint,
+                seguro: l.seguroPorCuota,
+                saldoFinal: Math.max(0, s),
+                estado: "pendiente",
+                pagoAcumulado: 0,
+              });
+              n++;
+              df =
+                l.frecuencia === "mensual"
+                  ? Utils.addMonths(df, 1)
+                  : l.frecuencia === "quincenal"
+                    ? Utils.addDays(df, 15)
+                    : Utils.addDays(df, 7);
+            }
+          } else {
+            const cRest = l.tabla.length - idxP;
+            let bDate = l.tabla[idxP].fecha;
+            bDate =
+              l.frecuencia === "mensual"
+                ? Utils.addMonths(bDate, -1)
+                : l.frecuencia === "quincenal"
+                  ? Utils.addDays(bDate, -15)
+                  : Utils.addDays(bDate, -7);
+            nTab = Core.generateTable(
+              nCap,
+              i,
+              cRest,
+              bDate,
+              l.frecuencia,
+              l.seguroPorCuota,
+            );
+            nTab.forEach((c, ix) => {
+              c.n = l.tabla[idxP].n + ix;
+            });
+          }
+          l.tabla = l.tabla.slice(0, idxP).concat(nTab);
+          l.plazo = l.tabla.length;
+          l.pagos.push({
+            id: Utils.generateUUID(),
+            fecha: f,
+            monto: m,
+            cuenta: cuentaSel,
+            cuotaNumero: "EXTRA",
+            detalle: { mora: 0, interes: 0, seguro: 0, capital: m },
+            tipo: "abono",
+          });
+          Store.saveLoan(l);
+          app.closeModal("modal-extra");
+          app.renderDetail();
+          alert("Abono procesado!");
+        },
+
+        // --- EXPORTACIÓN MEJORADA ---
+        printReceipt: (pId) => {
+          const l = Store.getLoan(app.state.activeLoanId),
+            p = l.pagos.find((x) => x.id === pId);
+          const h = `<html><head><meta charset="UTF-8"><title>Comprobante</title><style>body{font-family:sans-serif;padding:2rem;max-width:400px;margin:0 auto;border:1px solid #ccc}h2{text-align:center;border-bottom:2px dashed #ccc;padding-bottom:1rem}.r{display:flex;justify-content:space-between;margin-bottom:0.5rem}.t{font-size:1.2rem;font-weight:bold;border-top:1px solid #ccc;margin-top:0.5rem;padding-top:0.5rem}</style></head><body><h2>VISUAL PUBLICIDAD</h2><h4 style="text-align:center; margin-top:0;">Recibo de Pago</h4><div class="r"><span>Fecha:</span><b>${p.fecha}</b></div><div class="r"><span>Cliente:</span><b>${l.cliente.nombre}</b></div><div class="r"><span>Medio Pago:</span><b>${p.cuenta || "Efectivo"}</b></div><br><div class="r"><span>Mora:</span><span>${Utils.formatCOP(p.detalle.mora || 0)}</span></div><div class="r"><span>Interés:</span><span>${Utils.formatCOP(p.detalle.interes || 0)}</span></div><div class="r"><span>A Capital:</span><span>${Utils.formatCOP(p.detalle.capital || 0)}</span></div><div class="r t"><span>TOTAL:</span><span>${Utils.formatCOP(p.monto)}</span></div><script>window.onload=function(){window.print();}<\/script></body></html>`;
+          window.open(
+            URL.createObjectURL(new Blob([h], { type: "text/html" })),
+            "_blank",
+          );
+        },
+        exportStatementPDF: () => {
+          const l = Store.getLoan(app.state.activeLoanId),
+            st = app.state.currentAnalysis;
+          let tb = "";
+          l.tabla.forEach(
+            (r) =>
+              (tb += `<tr style="${r.estado === "pagada" ? "color:#888;background:#f9f9f9" : ""}"><td>${r.n}</td><td>${r.fecha}</td><td>${Utils.formatCOP(r.cuota)}</td><td>${Utils.formatCOP(r.capital)}</td><td>${Utils.formatCOP(r.interes)}</td><td>${Utils.formatCOP(r.saldoFinal)}</td><td>${r.estado === "pagada" ? "PAGADA" : "PENDIENTE"}</td></tr>`),
+          );
+          const h = `<html><head><meta charset="UTF-8"><title>Estado de Cuenta</title><style>body{font-family:sans-serif;padding:2rem}table{width:100%;border-collapse:collapse;margin-top:1rem;font-size:0.85rem}th,td{border:1px solid #ddd;padding:0.5rem;text-align:right}th{background:#eee}</style></head><body><h2>VISUAL PUBLICIDAD</h2><h1>ESTADO DE CUENTA</h1><h3>${l.cliente.nombre}</h3><p>Saldo Capital Activo: <b>${Utils.formatCOP(st.capitalVigente)}</b></p><table><thead><tr><th>N°</th><th>Fecha</th><th>Cuota</th><th>Capital</th><th>Interés</th><th>Saldo</th><th>Estado</th></tr></thead><tbody>${tb}</tbody></table><script>window.onload=function(){window.print();}<\/script></body></html>`;
+          window.open(
+            URL.createObjectURL(new Blob([h], { type: "text/html" })),
+            "_blank",
+          );
+        },
+        exportPazYSalvo: () => {
+          const l = Store.getLoan(app.state.activeLoanId);
+          const h = `<html><head><meta charset="UTF-8"><title>Paz y Salvo</title><style>body{font-family:sans-serif;padding:3rem;text-align:center;line-height:1.6}h1{color:#00D4AA;margin-bottom:2rem}</style></head><body><h2>VISUAL PUBLICIDAD</h2><h1>PAZ Y SALVO</h1><p>Certificamos que <b>${l.cliente.nombre}</b> canceló la totalidad de la obligación por <b>${Utils.formatCOP(l.capital)}</b>.</p><p>Saldo a la fecha: $0.</p><br><br><hr style="width:200px"><p>El Acreedor</p><script>window.onload=function(){window.print();}<\/script></body></html>`;
+          window.open(
+            URL.createObjectURL(new Blob([h], { type: "text/html" })),
+            "_blank",
+          );
+        },
+        exportCSV: () => {
+          let csv =
+            "Cliente,Cedula,Telefono,Capital Original,Saldo Actual,Estado,Proximo Pago,Estrellas Score\n";
+          Store.getData().loans.forEach((l) => {
+            const st = Core.analyzeStatus(l);
+            csv += `"${l.cliente.nombre}","${l.cliente.cedula}","${l.cliente.telefono}",${l.capital},${st.capitalVigente},${st.estadoColor},${st.proxFecha},${st.score}\n`;
+          });
+          const blob = new Blob([new Uint8Array([0xef, 0xbb, 0xbf]), csv], {
+            type: "text/csv;charset=utf-8",
+          });
+          const a = document.createElement("a");
+          a.href = URL.createObjectURL(blob);
+          a.download = `Cartera_Excel_${Utils.getToday()}.csv`;
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+        },
+        exportData: () => {
+          const a = document.createElement("a");
+          a.href =
+            "data:text/json;charset=utf-8," +
+            encodeURIComponent(JSON.stringify(Store.getData()));
+          a.download = `prestamos_backup_v5_${Utils.getToday()}.json`;
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+        },
+        importData: (e) => {
+          const f = e.target.files[0],
+            r = new FileReader();
+          r.onload = (ev) => {
+            try {
+              Store.saveData(JSON.parse(ev.target.result));
+              alert("Restaurado!");
+              app.init();
+            } catch (err) {
+              alert("Error JSON");
+            }
+          };
+          if (f) r.readAsText(f);
+        },
+      };
+
+      document
+        .getElementById("extra-tipo")
+        .addEventListener("change", app.simulateExtra);
+      window.onload = app.init;
+    </script>
+  </body>
+</html>
