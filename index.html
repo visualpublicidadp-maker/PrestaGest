@@ -9,7 +9,7 @@
     <meta name="apple-mobile-web-app-title" content="PrestaGest">
     <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%2300D4AA'/><text x='50' y='68' font-size='48' text-anchor='middle' fill='%230A0E1A' font-family='sans-serif' font-weight='bold'>PG</text></svg>">
     
-    <title>PrestaGest Pro v5.7</title>
+    <title>PrestaGest Pro v5.8</title>
     <style>
         :root {
             color-scheme: dark;
@@ -537,12 +537,15 @@
                 <input type="number" step="0.01" id="set-usura" class="form-control">
                 <p class="text-xs text-muted mt-1">La app usa esta tasa para advertirte al crear créditos y para los cálculos de mora predeterminados.</p>
             </div>
-            <div class="flex gap-1 mt-2">
+            <div class="flex gap-1 mt-2 mb-2">
                 <button class="btn btn-block" style="background: var(--border);" onclick="app.closeModal('modal-settings')">Cerrar</button>
                 <button class="btn btn-primary btn-block" onclick="app.saveSettings()">Guardar Ajustes</button>
             </div>
             
             <div class="mt-2 pt-2" style="border-top: 1px solid var(--border);">
+                <input type="file" id="import-file" accept=".json" class="hidden" onchange="app.importData(event)">
+                <button class="btn btn-block mb-1" style="background: rgba(255, 193, 7, 0.1); color: #ffc107; border: 1px solid #ffc107;" onclick="document.getElementById('import-file').click()">📥 Importar Backup .JSON</button>
+                
                 <button class="btn btn-danger btn-block" onclick="app.hardReset()">⚠️ Resetear Base de Datos</button>
             </div>
         </div>
@@ -587,10 +590,11 @@
         };
 
         const Store = {
-            key: 'prestamos_app_v57',
+            key: 'prestamos_app_v58',
             getData: () => { 
                 let d = null;
-                try { d = JSON.parse(localStorage.getItem('prestamos_app_v57')); } catch(e) {}
+                try { d = JSON.parse(localStorage.getItem('prestamos_app_v58')); } catch(e) {}
+                if (!d || !d.loans) { try { d = JSON.parse(localStorage.getItem('prestamos_app_v57')); } catch(e) {} }
                 if (!d || !d.loans) { try { d = JSON.parse(localStorage.getItem('prestamos_app_v56')); } catch(e) {} }
                 if (!d || !d.loans) { try { d = JSON.parse(localStorage.getItem('prestamos_app_v55')); } catch(e) {} }
                 if (!d || !d.loans) { try { d = JSON.parse(localStorage.getItem('prestamos_app_v54')); } catch(e) {} }
@@ -601,7 +605,7 @@
                     d = { loans: [], config: { usura: 31.5, lastBackup: Utils.getToday() } };
                 }
                 
-                localStorage.setItem('prestamos_app_v57', JSON.stringify(d));
+                localStorage.setItem('prestamos_app_v58', JSON.stringify(d));
                 return d; 
             },
             saveData: (data) => localStorage.setItem(Store.key, JSON.stringify(data)),
@@ -710,6 +714,7 @@
             },
             hardReset: () => {
                 if(confirm("⚠️ ATENCIÓN: Esto borrará absolutamente TODOS los clientes y datos de este dispositivo. Solo hazlo si tienes un Backup .JSON a salvo.\n\n¿Estás 100% seguro de vaciar la memoria?")) {
+                    localStorage.removeItem('prestamos_app_v58');
                     localStorage.removeItem('prestamos_app_v57');
                     localStorage.removeItem('prestamos_app_v56');
                     localStorage.removeItem('prestamos_app_v55');
