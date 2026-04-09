@@ -9,7 +9,7 @@
     <meta name="apple-mobile-web-app-title" content="PrestaGest">
     <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%2300D4AA'/><text x='50' y='68' font-size='48' text-anchor='middle' fill='%230A0E1A' font-family='sans-serif' font-weight='bold'>PG</text></svg>">
     
-    <title>PrestaGest Pro v5.5</title>
+    <title>PrestaGest Pro v5.6</title>
     <style>
         :root {
             color-scheme: dark;
@@ -380,6 +380,17 @@
                 </div>
             </div>
 
+            <div class="info-grid hidden" id="info-grid-sc" style="grid-template-columns: 1fr 1fr;">
+                <div class="info-item text-center">
+                    <span class="info-label">Capital Original</span>
+                    <span class="info-value currency" id="det-sc-monto-orig">$0</span>
+                </div>
+                <div class="info-item text-center" style="background: rgba(0,212,170,0.1); border-color: var(--primary);">
+                    <span class="info-label text-primary">Saldo Actual</span>
+                    <span class="info-value highlight currency" id="det-sc-saldo-actual">$0</span>
+                </div>
+            </div>
+
             <div class="text-center mb-1" id="mora-alert-container">
                 <div class="text-danger font-bold text-sm mb-1" id="det-mora-alert"></div>
             </div>
@@ -564,21 +575,21 @@
         };
 
         const Store = {
-            key: 'prestamos_app_v55',
+            key: 'prestamos_app_v56',
             getData: () => { 
                 let d = null;
-                try { d = JSON.parse(localStorage.getItem('prestamos_app_v55')); } catch(e) {}
+                try { d = JSON.parse(localStorage.getItem('prestamos_app_v56')); } catch(e) {}
+                if (!d || !d.loans) { try { d = JSON.parse(localStorage.getItem('prestamos_app_v55')); } catch(e) {} }
                 if (!d || !d.loans) { try { d = JSON.parse(localStorage.getItem('prestamos_app_v54')); } catch(e) {} }
                 if (!d || !d.loans) { try { d = JSON.parse(localStorage.getItem('prestamos_app_v53')); } catch(e) {} }
                 if (!d || !d.loans) { try { d = JSON.parse(localStorage.getItem('prestamos_app_v52')); } catch(e) {} }
                 if (!d || !d.loans) { try { d = JSON.parse(localStorage.getItem('prestamos_app_v51')); } catch(e) {} }
-                if (!d || !d.loans) { try { d = JSON.parse(localStorage.getItem('prestamos_app_v50')); } catch(e) {} }
                 
                 if (!d || !d.loans) {
                     d = { loans: [], config: { usura: 31.5, lastBackup: Utils.getToday() } };
                 }
                 
-                localStorage.setItem('prestamos_app_v55', JSON.stringify(d));
+                localStorage.setItem('prestamos_app_v56', JSON.stringify(d));
                 return d; 
             },
             saveData: (data) => localStorage.setItem(Store.key, JSON.stringify(data)),
@@ -687,6 +698,7 @@
             },
             hardReset: () => {
                 if(confirm("⚠️ ATENCIÓN: Esto borrará absolutamente TODOS los clientes y datos de este dispositivo. Solo hazlo si tienes un Backup .JSON a salvo.\n\n¿Estás 100% seguro de vaciar la memoria?")) {
+                    localStorage.removeItem('prestamos_app_v56');
                     localStorage.removeItem('prestamos_app_v55');
                     localStorage.removeItem('prestamos_app_v54');
                     localStorage.removeItem('prestamos_app_v53');
@@ -883,6 +895,9 @@
                 const iSC = l.tipo === 'solo_capital';
                 
                 document.getElementById('info-grid-normal').classList.toggle('hidden', iSC);
+                let scGrid = document.getElementById('info-grid-sc');
+                if(scGrid) scGrid.classList.toggle('hidden', !iSC);
+
                 if (!iSC) {
                     let pagadas = l.tabla.filter(c => c.estado === 'pagada').length;
                     document.getElementById('det-monto-orig').innerText = Utils.formatCOP(l.capital);
@@ -908,7 +923,9 @@
                     const tb = document.querySelector('#det-table tbody'); tb.innerHTML = ''; 
                     l.tabla.forEach(r => { let cls = ''; if (r.estado === 'pagada') { cls = 'row-pagada'; } else if (r.fecha < Utils.getToday()) cls = 'row-mora'; else if (st.cuotaActual && r.n === st.cuotaActual.n) cls = 'row-actual'; tb.innerHTML += `<tr class="${cls}"><td>${r.n} ${r.estado === 'pagada' ? '✓' : ''}</td><td>${r.fecha}</td><td class="currency">${Utils.formatCOP(r.cuota)}</td><td class="currency">${Utils.formatCOP(r.capital)}</td><td class="currency">${Utils.formatCOP(r.interes)}</td><td class="currency">${Utils.formatCOP(r.seguro)}</td><td class="currency">${Utils.formatCOP(r.saldoFinal)}</td></tr>`; });
                 } else {
-                    document.getElementById('det-mora-alert').innerText = 'Préstamo Solo Capital: ' + Utils.formatCOP(st.capitalVigente);
+                    document.getElementById('det-mora-alert').innerText = ''; 
+                    document.getElementById('det-sc-monto-orig').innerText = Utils.formatCOP(l.capital);
+                    document.getElementById('det-sc-saldo-actual').innerText = Utils.formatCOP(st.capitalVigente);
                 }
                 
                 document.getElementById('resumen-adicional').classList.toggle('hidden', iSC); 
