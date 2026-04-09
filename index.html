@@ -9,7 +9,7 @@
     <meta name="apple-mobile-web-app-title" content="PrestaGest">
     <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%2300D4AA'/><text x='50' y='68' font-size='48' text-anchor='middle' fill='%230A0E1A' font-family='sans-serif' font-weight='bold'>PG</text></svg>">
     
-    <title>PrestaGest Pro v5.6</title>
+    <title>PrestaGest Pro v5.7</title>
     <style>
         :root {
             color-scheme: dark;
@@ -332,7 +332,19 @@
                 <div class="input-group"><label>Cédula</label><input type="number" id="sc-cedula" class="form-control"></div>
                 <div class="input-group"><label>Teléfono</label><input type="tel" id="sc-tel" class="form-control"></div>
             </div>
-            <div class="input-group"><label>Saldo Adeudado ($) *</label><input type="text" inputmode="numeric" id="sc-capital" class="form-control currency-input" oninput="app.formatInput(event)"></div>
+            
+            <div class="form-row">
+                <div class="input-group">
+                    <label>Capital Original ($) *</label>
+                    <input type="text" inputmode="numeric" id="sc-capital" class="form-control currency-input" oninput="app.formatInput(event)">
+                </div>
+                <div class="input-group">
+                    <label>Saldo Actual ($) *</label>
+                    <input type="text" inputmode="numeric" id="sc-saldo" class="form-control currency-input" oninput="app.formatInput(event)">
+                </div>
+            </div>
+            <p class="text-xs text-muted mb-2">Si el cliente ya te ha pagado una parte, ingresa el saldo que te debe hoy. El sistema registrará la diferencia como un abono previo automáticamente.</p>
+
             <div class="input-group"><label>Fecha *</label><input type="date" id="sc-fecha" class="form-control"></div>
             <div class="input-group"><label>Notas</label><textarea id="sc-notas" class="form-control" rows="2"></textarea></div>
             <button class="btn btn-success btn-block mt-2" onclick="app.createSoloCapital()">✅ Crear Préstamo Especial</button>
@@ -575,21 +587,21 @@
         };
 
         const Store = {
-            key: 'prestamos_app_v56',
+            key: 'prestamos_app_v57',
             getData: () => { 
                 let d = null;
-                try { d = JSON.parse(localStorage.getItem('prestamos_app_v56')); } catch(e) {}
+                try { d = JSON.parse(localStorage.getItem('prestamos_app_v57')); } catch(e) {}
+                if (!d || !d.loans) { try { d = JSON.parse(localStorage.getItem('prestamos_app_v56')); } catch(e) {} }
                 if (!d || !d.loans) { try { d = JSON.parse(localStorage.getItem('prestamos_app_v55')); } catch(e) {} }
                 if (!d || !d.loans) { try { d = JSON.parse(localStorage.getItem('prestamos_app_v54')); } catch(e) {} }
                 if (!d || !d.loans) { try { d = JSON.parse(localStorage.getItem('prestamos_app_v53')); } catch(e) {} }
                 if (!d || !d.loans) { try { d = JSON.parse(localStorage.getItem('prestamos_app_v52')); } catch(e) {} }
-                if (!d || !d.loans) { try { d = JSON.parse(localStorage.getItem('prestamos_app_v51')); } catch(e) {} }
                 
                 if (!d || !d.loans) {
                     d = { loans: [], config: { usura: 31.5, lastBackup: Utils.getToday() } };
                 }
                 
-                localStorage.setItem('prestamos_app_v56', JSON.stringify(d));
+                localStorage.setItem('prestamos_app_v57', JSON.stringify(d));
                 return d; 
             },
             saveData: (data) => localStorage.setItem(Store.key, JSON.stringify(data)),
@@ -698,14 +710,13 @@
             },
             hardReset: () => {
                 if(confirm("⚠️ ATENCIÓN: Esto borrará absolutamente TODOS los clientes y datos de este dispositivo. Solo hazlo si tienes un Backup .JSON a salvo.\n\n¿Estás 100% seguro de vaciar la memoria?")) {
+                    localStorage.removeItem('prestamos_app_v57');
                     localStorage.removeItem('prestamos_app_v56');
                     localStorage.removeItem('prestamos_app_v55');
                     localStorage.removeItem('prestamos_app_v54');
                     localStorage.removeItem('prestamos_app_v53');
                     localStorage.removeItem('prestamos_app_v52');
                     localStorage.removeItem('prestamos_app_v51');
-                    localStorage.removeItem('prestamos_app_v50');
-                    localStorage.removeItem('prestamos_app_v42');
                     location.reload();
                 }
             },
@@ -873,9 +884,27 @@
             createSoloCapital: () => {
                 const cli = { nombre: document.getElementById('sc-nombre').value, cedula: document.getElementById('sc-cedula').value, telefono: document.getElementById('sc-tel').value };
                 if (!cli.nombre) return app.showToast("Nombre obligatorio", "error");
-                const P = app.getRawVal('sc-capital'), fIni = document.getElementById('sc-fecha').value, nota = document.getElementById('sc-notas').value.trim();
-                if (!P || !fIni) return app.showToast("Faltan datos", "error");
-                Store.saveLoan({ id: Utils.generateUUID(), tipo: 'solo_capital', fechaCreacion: Utils.getToday(), cliente: cli, capital: P, pagos: [], notas: nota ? [{ fecha: Utils.getToday(), txt: nota }] : [] });
+                
+                const P_orig = app.getRawVal('sc-capital');
+                const P_actual = app.getRawVal('sc-saldo');
+                const fIni = document.getElementById('sc-fecha').value;
+                const nota = document.getElementById('sc-notas').value.trim();
+                
+                if (!P_orig || P_orig <= 0 || !fIni) return app.showToast("Ingresa el capital original", "error");
+                
+                let saldoActual = document.getElementById('sc-saldo').value === '' ? P_orig : P_actual;
+                if (saldoActual > P_orig) return app.showToast("El saldo actual no puede ser mayor al original", "error");
+
+                let pagosIni = [];
+                let notasIni = nota ? [{ fecha: Utils.getToday(), txt: nota }] : [];
+                
+                if (saldoActual < P_orig) {
+                    let dif = P_orig - saldoActual;
+                    pagosIni.push({ id: Utils.generateUUID(), fecha: fIni, monto: dif, cuenta: 'Ajuste Inicial', cuotaNumero: '-', detalle: { mora: 0, interes: 0, seguro: 0, capital: dif }, tipo: 'abono_sc' });
+                    notasIni.push({ fecha: Utils.getToday(), txt: `Ajuste de saldo: se registró un abono previo a la app por ${Utils.formatCOP(dif)}` });
+                }
+
+                Store.saveLoan({ id: Utils.generateUUID(), tipo: 'solo_capital', fechaCreacion: Utils.getToday(), cliente: cli, capital: P_orig, pagos: pagosIni, notas: notasIni });
                 app.showToast("✅ Préstamo Especial creado"); app.nav('dashboard');
             },
 
