@@ -9,7 +9,7 @@
     <meta name="apple-mobile-web-app-title" content="PrestaGest">
     <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%2300D4AA'/><text x='50' y='68' font-size='48' text-anchor='middle' fill='%230A0E1A' font-family='sans-serif' font-weight='bold'>PG</text></svg>">
     
-    <title>PrestaGest Pro v5.4</title>
+    <title>PrestaGest Pro v5.5</title>
     <style>
         :root {
             color-scheme: dark;
@@ -564,10 +564,11 @@
         };
 
         const Store = {
-            key: 'prestamos_app_v54',
+            key: 'prestamos_app_v55',
             getData: () => { 
                 let d = null;
-                try { d = JSON.parse(localStorage.getItem('prestamos_app_v54')); } catch(e) {}
+                try { d = JSON.parse(localStorage.getItem('prestamos_app_v55')); } catch(e) {}
+                if (!d || !d.loans) { try { d = JSON.parse(localStorage.getItem('prestamos_app_v54')); } catch(e) {} }
                 if (!d || !d.loans) { try { d = JSON.parse(localStorage.getItem('prestamos_app_v53')); } catch(e) {} }
                 if (!d || !d.loans) { try { d = JSON.parse(localStorage.getItem('prestamos_app_v52')); } catch(e) {} }
                 if (!d || !d.loans) { try { d = JSON.parse(localStorage.getItem('prestamos_app_v51')); } catch(e) {} }
@@ -577,7 +578,7 @@
                     d = { loans: [], config: { usura: 31.5, lastBackup: Utils.getToday() } };
                 }
                 
-                localStorage.setItem('prestamos_app_v54', JSON.stringify(d));
+                localStorage.setItem('prestamos_app_v55', JSON.stringify(d));
                 return d; 
             },
             saveData: (data) => localStorage.setItem(Store.key, JSON.stringify(data)),
@@ -686,6 +687,7 @@
             },
             hardReset: () => {
                 if(confirm("⚠️ ATENCIÓN: Esto borrará absolutamente TODOS los clientes y datos de este dispositivo. Solo hazlo si tienes un Backup .JSON a salvo.\n\n¿Estás 100% seguro de vaciar la memoria?")) {
+                    localStorage.removeItem('prestamos_app_v55');
                     localStorage.removeItem('prestamos_app_v54');
                     localStorage.removeItem('prestamos_app_v53');
                     localStorage.removeItem('prestamos_app_v52');
@@ -759,9 +761,10 @@
 
                     let gridHTML = '';
                     if(l.tipo !== 'solo_capital') {
+                        let pagadas = l.tabla ? l.tabla.filter(c => c.estado === 'pagada').length : 0;
                         gridHTML = `
                             <div class="card-inner-grid">
-                                <div><div class="text-xs text-muted uppercase">Cuotas Totales</div><div class="font-bold">${l.plazo}</div></div>
+                                <div><div class="text-xs text-muted uppercase">Progreso Cuotas</div><div class="font-bold">${pagadas} / ${l.plazo}</div></div>
                                 <div><div class="text-xs text-muted uppercase">Valor cuota</div><div class="font-bold currency">${Utils.formatCOP(l.cuotaFija)}</div></div>
                                 <div><div class="text-xs text-muted uppercase">Capital prestado</div><div class="font-bold currency">${Utils.formatCOP(l.capital)}</div></div>
                                 <div><div class="text-xs text-muted uppercase">Tasa de interés</div><div class="font-bold">${l.tasaAnual}% ${l.tasaTipo.toUpperCase()}</div></div>
@@ -769,8 +772,9 @@
                         `;
                     } else {
                         gridHTML = `
-                            <div class="card-inner-grid" style="grid-template-columns: 1fr;">
-                                <div><div class="text-xs text-muted uppercase">Capital prestado</div><div class="font-bold currency">${Utils.formatCOP(l.capital)}</div></div>
+                            <div class="card-inner-grid">
+                                <div><div class="text-xs text-muted uppercase">Capital original</div><div class="font-bold currency">${Utils.formatCOP(l.capital)}</div></div>
+                                <div><div class="text-xs text-muted uppercase" style="color: var(--primary);">Saldo actual</div><div class="font-bold currency" style="color: var(--primary); font-size: 1.1rem;">${Utils.formatCOP(st.capitalVigente)}</div></div>
                             </div>
                         `;
                     }
