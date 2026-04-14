@@ -7,9 +7,9 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="PrestaGest">
-    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%2300D4AA'/><text x='50' y='68' font-size='48' text-anchor='middle' fill='%230A0E1A' font-family='sans-serif' font-weight='bold'>PG</text></svg>">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%2300D4AA'/%3E%3Ctext x='50' y='68' font-size='48' text-anchor='middle' fill='%230A0E1A' font-family='sans-serif' font-weight='bold'%3EPG%3C/text%3E%3C/svg%3E">
     
-    <title>PrestaGest Pro v5.8</title>
+    <title>PrestaGest Pro v5.9</title>
     <style>
         :root {
             color-scheme: dark;
@@ -191,7 +191,7 @@
         </div>
 
         <div class="input-group relative">
-            <input type="text" id="search-input" class="form-control" placeholder="Buscar por nombre o cédula..." oninput="app.renderDashboard()">
+            <input type="text" id="search-input" class="form-control" placeholder="Buscar por nombre o cédula..." oninput="app.debounceSearch()">
         </div>
 
         <div class="chip-scroll no-print">
@@ -431,8 +431,11 @@
             </div>
         </div>
 
-        <details class="card mb-2">
-            <summary class="font-bold" style="cursor: pointer; outline: none;">Datos del Préstamo y Cliente</summary>
+        <details class="card mb-2" open>
+            <summary class="font-bold flex justify-between items-center" style="cursor: pointer; outline: none;">
+                <span>Datos del Cliente</span>
+                <button class="btn" style="padding: 0.2rem 0.5rem; font-size: 0.8rem; background: var(--border);" onclick="event.preventDefault(); app.openEditClientModal()">✏️ Editar</button>
+            </summary>
             <div class="mt-1 text-sm flex-col gap-1" id="det-info-html"></div>
             <div class="mt-2 text-right">
                 <button class="btn btn-block" onclick="app.exportStatementPDF()" id="btn-export-est">Generar Estado de Cuenta</button>
@@ -461,6 +464,23 @@
                 <thead><tr><th>Fecha</th><th>Monto</th><th>Método</th><th>Recibo</th></tr></thead>
                 <tbody></tbody>
             </table>
+        </div>
+    </div>
+
+    <div id="modal-edit-client" class="modal-overlay">
+        <div class="drawer">
+            <div class="drawer-handle"></div>
+            <h2 class="mb-2">Editar Cliente</h2>
+            <div class="input-group"><label>Nombre Completo</label><input type="text" id="edit-nombre" class="form-control"></div>
+            <div class="form-row">
+                <div class="input-group"><label>Cédula</label><input type="number" id="edit-cedula" class="form-control"></div>
+                <div class="input-group"><label>Teléfono</label><input type="tel" id="edit-tel" class="form-control"></div>
+            </div>
+            <div class="input-group"><label>Garantía / Respaldo</label><input type="text" id="edit-garantia" class="form-control"></div>
+            <div class="flex gap-1 mt-2">
+                <button class="btn btn-block" style="background: var(--border);" onclick="app.closeModal('modal-edit-client')">Cancelar</button>
+                <button class="btn btn-primary btn-block" onclick="app.saveClientEdit()">💾 Guardar</button>
+            </div>
         </div>
     </div>
 
@@ -558,6 +578,23 @@
     </div>
 
     <script>
+        // HACK PWA: Generar el manifest y el service worker internamente para que la app sea instalable
+        const setupPWA = () => {
+            const manifest = {
+                name: "PrestaGest Pro", short_name: "PrestaGest",
+                display: "standalone", background_color: "#0A0E1A", theme_color: "#00D4AA",
+                icons: [{ src: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%2300D4AA'/%3E%3Ctext x='50' y='68' font-size='48' text-anchor='middle' fill='%230A0E1A' font-family='sans-serif' font-weight='bold'%3EPG%3C/text%3E%3C/svg%3E", sizes: "192x192", type: "image/svg+xml" }]
+            };
+            const mBlob = new Blob([JSON.stringify(manifest)], {type: 'application/json'});
+            const link = document.createElement('link'); link.rel = 'manifest'; link.href = URL.createObjectURL(mBlob);
+            document.head.appendChild(link);
+            
+            const swCode = `self.addEventListener('install', e => self.skipWaiting()); self.addEventListener('activate', e => self.clients.claim()); self.addEventListener('fetch', e => {});`;
+            const swBlob = new Blob([swCode], {type: 'application/javascript'});
+            if ('serviceWorker' in navigator) navigator.serviceWorker.register(URL.createObjectURL(swBlob)).catch(()=>{});
+        };
+        setupPWA();
+
         const Utils = {
             formatCOP: (num) => new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(Math.round(num) || 0),
             parseDateSafe: (str) => {
@@ -590,22 +627,22 @@
         };
 
         const Store = {
-            key: 'prestamos_app_v58',
+            key: 'prestamos_app_v59',
             getData: () => { 
                 let d = null;
-                try { d = JSON.parse(localStorage.getItem('prestamos_app_v58')); } catch(e) {}
+                try { d = JSON.parse(localStorage.getItem('prestamos_app_v59')); } catch(e) {}
+                if (!d || !d.loans) { try { d = JSON.parse(localStorage.getItem('prestamos_app_v58')); } catch(e) {} }
                 if (!d || !d.loans) { try { d = JSON.parse(localStorage.getItem('prestamos_app_v57')); } catch(e) {} }
                 if (!d || !d.loans) { try { d = JSON.parse(localStorage.getItem('prestamos_app_v56')); } catch(e) {} }
                 if (!d || !d.loans) { try { d = JSON.parse(localStorage.getItem('prestamos_app_v55')); } catch(e) {} }
                 if (!d || !d.loans) { try { d = JSON.parse(localStorage.getItem('prestamos_app_v54')); } catch(e) {} }
                 if (!d || !d.loans) { try { d = JSON.parse(localStorage.getItem('prestamos_app_v53')); } catch(e) {} }
-                if (!d || !d.loans) { try { d = JSON.parse(localStorage.getItem('prestamos_app_v52')); } catch(e) {} }
                 
                 if (!d || !d.loans) {
                     d = { loans: [], config: { usura: 31.5, lastBackup: Utils.getToday() } };
                 }
                 
-                localStorage.setItem('prestamos_app_v58', JSON.stringify(d));
+                localStorage.setItem('prestamos_app_v59', JSON.stringify(d));
                 return d; 
             },
             saveData: (data) => localStorage.setItem(Store.key, JSON.stringify(data)),
@@ -667,7 +704,7 @@
         };
 
         const app = {
-            state: { view: 'dashboard', activeLoanId: null, filter: 'todos', moraOverrideZero: false },
+            state: { view: 'dashboard', activeLoanId: null, filter: 'todos', moraOverrideZero: false, searchTimeout: null },
             init: () => { 
                 app.checkBackup(); 
                 app.nav('dashboard'); 
@@ -697,7 +734,12 @@
             
             checkBackup: () => {
                 let d = Store.getData(); 
-                if (Utils.diffDays(d.config.lastBackup, Utils.getToday()) >= 7) { d.config.lastBackup = Utils.getToday(); Store.saveData(d); app.showToast("Generando backup semanal...", "success"); app.exportData(); }
+                if (Utils.diffDays(d.config.lastBackup, Utils.getToday()) >= 7) { 
+                    d.config.lastBackup = Utils.getToday(); 
+                    Store.saveData(d); 
+                    app.showToast("Generando backup semanal de seguridad...", "success"); 
+                    setTimeout(() => app.exportData(), 2000);
+                }
             },
             
             openSettings: () => {
@@ -714,14 +756,12 @@
             },
             hardReset: () => {
                 if(confirm("⚠️ ATENCIÓN: Esto borrará absolutamente TODOS los clientes y datos de este dispositivo. Solo hazlo si tienes un Backup .JSON a salvo.\n\n¿Estás 100% seguro de vaciar la memoria?")) {
+                    localStorage.removeItem('prestamos_app_v59');
                     localStorage.removeItem('prestamos_app_v58');
                     localStorage.removeItem('prestamos_app_v57');
                     localStorage.removeItem('prestamos_app_v56');
                     localStorage.removeItem('prestamos_app_v55');
                     localStorage.removeItem('prestamos_app_v54');
-                    localStorage.removeItem('prestamos_app_v53');
-                    localStorage.removeItem('prestamos_app_v52');
-                    localStorage.removeItem('prestamos_app_v51');
                     location.reload();
                 }
             },
@@ -736,6 +776,13 @@
             },
             setFilter: (f, el) => { app.state.filter = f; document.querySelectorAll('.chip').forEach(c => c.classList.remove('active')); el.classList.add('active'); app.renderDashboard(); },
             
+            debounceSearch: () => {
+                clearTimeout(app.state.searchTimeout);
+                app.state.searchTimeout = setTimeout(() => {
+                    app.renderDashboard();
+                }, 300); // 300ms de espera antes de filtrar
+            },
+
             renderDashboard: () => {
                 const data = Store.getData().loans, term = document.getElementById('search-input').value.toLowerCase();
                 const list = document.getElementById('loans-list'); list.innerHTML = '';
@@ -981,6 +1028,33 @@
                     th.innerHTML += `<tr><td>${p.fecha}</td><td class="currency text-success">+${Utils.formatCOP(p.monto)}</td><td class="text-sm">${cBadge}</td><td><button class="btn btn-primary" style="padding:0.2rem 0.5rem; font-size:0.8rem;" onclick="app.printReceipt('${p.id}')">Ver</button></td></tr>`; 
                 });
             },
+
+            openEditClientModal: () => {
+                const l = Store.getLoan(app.state.activeLoanId);
+                document.getElementById('edit-nombre').value = l.cliente.nombre || '';
+                document.getElementById('edit-cedula').value = l.cliente.cedula || '';
+                document.getElementById('edit-tel').value = l.cliente.telefono || '';
+                document.getElementById('edit-garantia').value = l.garantia || '';
+                document.getElementById('modal-edit-client').classList.add('active');
+            },
+
+            saveClientEdit: () => {
+                const l = Store.getLoan(app.state.activeLoanId);
+                const nuevoNombre = document.getElementById('edit-nombre').value.trim();
+                
+                if (!nuevoNombre) return app.showToast("El nombre es obligatorio", "error");
+                
+                l.cliente.nombre = nuevoNombre;
+                l.cliente.cedula = document.getElementById('edit-cedula').value.trim();
+                l.cliente.telefono = document.getElementById('edit-tel').value.trim();
+                l.garantia = document.getElementById('edit-garantia').value.trim();
+                
+                Store.saveLoan(l);
+                app.closeModal('modal-edit-client');
+                app.renderDetail();
+                app.showToast("✅ Cliente actualizado");
+            },
+
             togglePause: () => { const l = Store.getLoan(app.state.activeLoanId); l.pausado = !l.pausado; Store.saveLoan(l); app.renderDetail(); },
             addNote: () => { const txt = document.getElementById('nueva-nota').value.trim(); if (!txt) return; const l = Store.getLoan(app.state.activeLoanId); l.notas = l.notas || []; l.notas.push({ fecha: Utils.getToday(), txt }); Store.saveLoan(l); document.getElementById('nueva-nota').value = ''; app.renderDetail(); },
             deleteLoan: () => { if (confirm('¿Eliminar permanente?')) { Store.deleteLoan(app.state.activeLoanId); app.nav('dashboard'); app.showToast("Eliminado", "error");} },
